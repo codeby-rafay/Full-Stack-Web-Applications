@@ -1,0 +1,246 @@
+.preview-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.download-btn {
+  position: sticky;
+  bottom: 16px;
+}
+
+.resume-document {
+  width: 100%;
+  max-width: 420px;
+  min-height: 560px;
+  background: #ffffff;
+  color: #1a1a1a;
+  font-family: 'Inter', sans-serif;
+  font-size: 8px;
+  line-height: 1.4;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.resume-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  color: #999;
+  font-size: 10px;
+  text-align: center;
+  padding: 40px;
+}
+
+.resume-header-simple {
+  padding: 20px 24px 14px;
+  border-bottom: 2px solid var(--tpl-primary, #6C63FF);
+}
+
+.resume-header-simple h1 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.header-title {
+  font-size: 10px;
+  color: #555;
+  margin-bottom: 6px;
+}
+
+.header-contact-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 7px;
+  color: #666;
+}
+
+.resume-header-centered {
+  padding: 18px 24px;
+  text-align: center;
+  color: white;
+}
+
+.resume-header-centered h1 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 2px;
+  color: white;
+}
+
+.resume-header-centered .header-title {
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: 8px;
+}
+
+.header-contact {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 7px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.resume-body {
+  padding: 16px 24px 20px;
+}
+
+.resume-body.two-col {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 18px;
+}
+
+.resume-section {
+  margin-bottom: 14px;
+}
+
+.section-heading {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  padding-bottom: 3px;
+  border-bottom: 1.5px solid;
+  margin-bottom: 8px;
+}
+
+.resume-entry {
+  margin-bottom: 10px;
+}
+
+.resume-entry strong {
+  font-size: 9px;
+  display: block;
+}
+
+.entry-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.entry-date {
+  font-size: 7px;
+  color: #888;
+  white-space: nowrap;
+}
+
+.entry-company {
+  font-size: 8px;
+  color: #555;
+  margin-bottom: 3px;
+}
+
+.entry-desc {
+  font-size: 7.5px;
+  color: #444;
+  line-height: 1.5;
+  white-space: pre-line;
+}
+
+.entry-tech {
+  font-size: 7px;
+  color: #666;
+  font-style: italic;
+  margin-top: 2px;
+}
+
+.resume-skills-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.resume-skill-tag {
+  font-size: 7px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: #f0f0f0;
+  color: #333;
+  border: 1px solid #ddd;
+}
+
+.resume-sidebar-layout {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  min-height: 560px;
+}
+
+.resume-sidebar-left {
+  padding: 18px 12px;
+  color: white;
+}
+
+.sidebar-personal {
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+.sidebar-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 auto 8px;
+}
+
+.sidebar-personal h2 {
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.sidebar-title {
+  font-size: 8px;
+  opacity: 0.85;
+}
+
+.sidebar-contact,
+.sidebar-skills {
+  margin-bottom: 14px;
+}
+
+.sidebar-contact h3,
+.sidebar-skills h3 {
+  font-size: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 6px;
+  opacity: 0.7;
+}
+
+.sidebar-contact p {
+  font-size: 7px;
+  margin-bottom: 3px;
+  opacity: 0.9;
+}
+
+.sidebar-skill-list {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.sidebar-skill {
+  font-size: 7px;
+  padding: 3px 8px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
+}
+
+.resume-sidebar-right {
+  padding: 18px 16px;
+}

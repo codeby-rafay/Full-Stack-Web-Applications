@@ -1,0 +1,204 @@
+.dashboard-page {
+  padding: 100px 0 60px;
+  min-height: 100vh;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.dashboard-header h1 {
+  font-size: 2rem;
+  margin-bottom: 4px;
+}
+
+.dashboard-subtitle {
+  color: var(--text-secondary);
+  font-size: 1rem;
+}
+
+.dashboard-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.resume-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.resume-card {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.resume-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 4px;
+}
+
+.ats-badge {
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.ats-badge.good { background: rgba(34, 197, 94, 0.2); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3); }
+.ats-badge.avg { background: rgba(234, 179, 8, 0.2); color: #facc15; border: 1px solid rgba(234, 179, 8, 0.3); }
+.ats-badge.poor { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+
+.preview-placeholder {
+  padding: 24px;
+  background: rgba(108, 99, 255, 0.03);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.resume-card-preview {
+  padding: 24px;
+  background: rgba(108, 99, 255, 0.03);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.mini-resume {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mini-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.mini-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--gradient-primary);
+  flex-shrink: 0;
+}
+
+.mini-lines {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.mini-line {
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.mini-line-sm { width: 30%; }
+.mini-line-md { width: 50%; }
+.mini-line-lg { width: 70%; }
+.mini-line-full { width: 100%; }
+
+.resume-card-info {
+  padding: 20px 24px 12px;
+}
+
+.resume-card-info h3 {
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+}
+
+.resume-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.resume-date {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.resume-card-role {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.resume-card-body {
+  padding: 0 24px 16px;
+  flex: 1;
+}
+
+.resume-card-role {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  margin-top: 4px;
+}
+
+.resume-card-actions {
+  padding: 12px 24px 20px;
+  display: flex;
+  gap: 8px;
+  margin-top: auto;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 80px 40px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.empty-icon {
+  font-size: 3.5rem;
+  margin-bottom: 20px;
+}
+
+.empty-state h2 {
+  font-size: 1.6rem;
+  margin-bottom: 12px;
+}
+
+.empty-state p {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  margin-bottom: 28px;
+  line-height: 1.6;
+}
+
+.empty-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .dashboard-header {
+    flex-direction: column;
+  }
+
+  .dashboard-actions {
+    width: 100%;
+  }
+
+  .dashboard-actions .btn {
+    flex: 1;
+  }
+
+  .resume-grid {
+    grid-template-columns: 1fr;
+  }
+}
