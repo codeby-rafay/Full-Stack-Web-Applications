@@ -1,4 +1,4 @@
-# ResumeAI — Premium AI-Powered Resume Builder
+# ResumeAI - Premium AI-Powered Resume Builder
 
 ResumeAI is a modern, full-stack web application designed to help job seekers create stunning, ATS-friendly resumes in minutes. Leveraging the power of Google Gemini AI, it offers intelligent content generation and real-time ATS compatibility scoring.
 
@@ -79,7 +79,3 @@ ResumeAI is a modern, full-stack web application designed to help job seekers cr
    cd client
    npm run dev
    ```
-
-## License
-
-This project is licensed under the MIT License.
