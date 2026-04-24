@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const CreatePost = () => {
   const navigate = useNavigate();
@@ -137,12 +137,12 @@ const CreatePost = () => {
         <div className="mt-12 text-center">
           <p className="text-gray-400 text-lg">
             Want to see other posts?
-            <a
-              href="/feed"
+            <Link
+              to="/feed"
               className="ml-3 text-cyan-400 hover:text-cyan-300 font-bold transition-colors hover:underline"
             >
               View Feed →
-            </a>
+            </Link>
           </p>
         </div>
       </div>
