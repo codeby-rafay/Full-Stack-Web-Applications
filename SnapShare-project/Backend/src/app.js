@@ -36,4 +36,21 @@ app.get("/posts", async (req, res) => {
   });
 });
 
+app.delete("/posts/:id", async (req, res) => {
+  const id = req.params.id;
+  await postModel.findOneAndDelete({ _id: id });
+  res.status(200).json({
+    message: "Post deleted successfully",
+  });
+});
+
+app.patch("/posts/:id", async (req, res) => {
+  const id = req.params.id;
+  const caption = req.body.caption;
+  await postModel.findOneAndUpdate({ _id: id }, { caption: caption });
+  res.status(200).json({
+    message: "Post updated successfully",
+  });
+});
+
 module.exports = app;

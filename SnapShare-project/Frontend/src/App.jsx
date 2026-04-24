@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import CreatePost from "./pages/CreatePost";
 import Feed from "./pages/Feed";
 import Navbar from "./components/Navbar";
+import UpdateCaption from "./pages/UpdateCaption";
 
 const App = () => {
   return (
@@ -18,6 +19,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<CreatePost />} />
           <Route path="/feed" element={<Feed />} />
+          <Route path="/edit-caption/:postId" element={<UpdateCaption />} />
         </Routes>
       </main>
     </div>

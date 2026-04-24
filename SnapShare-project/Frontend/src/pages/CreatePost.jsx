@@ -93,7 +93,6 @@ const CreatePost = () => {
                     name="caption"
                     placeholder="What's on your mind? Make it interesting!"
                     className="w-full px-10 py-8 border-3 border-pink-500/50 rounded-3xl focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent bg-slate-800/70 text-white placeholder-gray-400 backdrop-blur-sm transition-all duration-300 hover:border-pink-400/80 hover:bg-slate-800/90 text-lg"
-                    required
                   />
                   <div className="absolute inset-0 rounded-3xl bg-linear-to-r from-pink-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
                 </div>

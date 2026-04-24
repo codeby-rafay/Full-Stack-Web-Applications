@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Feed = () => {
+  const navigate = useNavigate();
   const [posts, setPosts] = useState([
     {
       _id: "1",
@@ -11,6 +13,7 @@ const Feed = () => {
   ]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [deletingId, setDeletingId] = useState(null);
 
   useEffect(() => {
     setLoading(true);
@@ -28,6 +31,30 @@ const Feed = () => {
         setLoading(false);
       });
   }, []);
+
+  const handleEdit = (postId) => {
+    navigate(`/edit-caption/${postId}`);
+  };
+
+  const handleDelete = async (postId) => {
+    if (window.confirm("Are you sure you want to delete this post?")) {
+      try {
+        setDeletingId(postId);
+        const response = await axios.delete(
+          `http://localhost:3000/posts/${postId}`,
+        );
+        setPosts(posts.filter((post) => post._id !== postId));
+        setError(null);
+      } catch (err) {
+        setError(
+          err.response?.data?.message || "Failed to delete post. Try again.",
+        );
+        console.error("Error deleting post:", err);
+      } finally {
+        setDeletingId(null);
+      }
+    }
+  };
 
   return (
     <div>
@@ -77,10 +104,10 @@ const Feed = () => {
                   <img
                     src={post.image}
                     alt="post"
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 brightness-90 group-hover:brightness-110"
+                    className="w-full h-full object-cover duration-500 brightness-100 group-hover:brightness-110"
                   />
                   {/* Overlay Gradient */}
-                  <div className="absolute inset-0 bg-linear-to-t from-slate-900/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <div className="absolute inset-0 bg-linear-to-t opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </div>
 
                 {/* Content Section */}
@@ -102,12 +129,19 @@ const Feed = () => {
                         {post._id.slice(0, 6)}
                       </span>
                     </div>
-                    <div className="flex gap-2"> 
-                      <button className="px-4 py-2 bg-linear-to-r from-cyan-500/20 to-pink-500/20 border border-cyan-400/50 text-cyan-300 hover:text-cyan-100 rounded-xl text-xs font-bold hover:from-cyan-500/40 hover:to-pink-500/40 hover:border-cyan-300/80 transition-all duration-300 transform hover:scale-110 hover:shadow-lg hover:shadow-cyan-500/30">
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => handleEdit(post._id)}
+                        className="px-4 py-2 bg-linear-to-r from-cyan-500/20 to-pink-500/20 border border-cyan-400/50 text-cyan-300 hover:text-cyan-100 rounded-xl text-xs font-bold hover:from-cyan-500/40 hover:to-pink-500/40 hover:border-cyan-300/80 transition-all duration-300 transform hover:scale-110 hover:shadow-lg hover:shadow-cyan-500/30"
+                      >
                         Edit
                       </button>
-                      <button className="px-4 py-2 bg-linear-to-r from-cyan-500/20 to-pink-500/20 border border-cyan-400/50 text-cyan-300 hover:text-cyan-100 rounded-xl text-xs font-bold hover:from-cyan-500/40 hover:to-pink-500/40 hover:border-cyan-300/80 transition-all duration-300 transform hover:scale-110 hover:shadow-lg hover:shadow-cyan-500/30">
-                        Delete
+                      <button
+                        onClick={() => handleDelete(post._id)}
+                        disabled={deletingId === post._id}
+                        className="px-4 py-2 bg-linear-to-r from-red-500/20 to-pink-500/20 border border-red-400/50 text-red-300 hover:text-red-100 rounded-xl text-xs font-bold hover:from-red-500/40 hover:to-pink-500/40 hover:border-red-300/80 transition-all duration-300 transform hover:scale-110 hover:shadow-lg hover:shadow-red-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {deletingId === post._id ? "Deleting..." : "Delete"}
                       </button>
                     </div>
                   </div>
