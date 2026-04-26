@@ -40,7 +40,7 @@ const UpdateCaption = () => {
       {/* Header */}
       <div className="text-center mb-16 mt-10">
         <h1 className="text-5xl md:text-6xl font-black bg-linear-to-r from-cyan-400 via-purple-400 to-pink-500 bg-clip-text text-transparent mb-3 animate-pulse">
-          Update Caption
+          Edit Caption
         </h1>
         <p className="text-purple-300/70 text-lg">Edit your post's caption</p>
       </div>
