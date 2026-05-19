@@ -26,8 +26,6 @@ const ReviewOrdersUser = () => {
   const [actionType, setActionType] = useState(null); // delete or cancel
   const [expandedOrderId, setExpandedOrderId] = useState(null);
 
-  window.scrollTo({ top: 0, behavior: "smooth" });
-
   useEffect(() => {
     const fetchOrders = async () => {
       if (!currentUser) return;

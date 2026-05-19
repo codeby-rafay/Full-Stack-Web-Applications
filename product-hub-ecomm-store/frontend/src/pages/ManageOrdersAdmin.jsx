@@ -26,8 +26,6 @@ const ManageOrdersAdmin = () => {
   const [orderToDelete, setOrderToDelete] = useState(null);
   const navigate = useNavigate();
 
-  window.scrollTo({ top: 0, behavior: "smooth" });
-
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleString("en-US", {

@@ -14,8 +14,6 @@ function AdminPage() {
   const [recordToDelete, setRecordToDelete] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
 
-  window.scrollTo({ top: 0, behavior: "smooth" });
-
   const filteredUserData = userData.filter((record) => {
     if (!searchQuery.trim()) return true;
     const query = searchQuery.toLowerCase();
