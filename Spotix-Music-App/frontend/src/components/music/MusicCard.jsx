@@ -6,14 +6,14 @@ export default function MusicCard({ music, onPlay, active }) {
       onClick={() => onPlay(music)}
       className={`group relative overflow-hidden rounded-xl transition-all duration-300 cursor-pointer transform hover:scale-105 ${
         active
-          ? "bg-gradient-to-br from-green-600 to-emerald-600 shadow-xl shadow-green-700/50"
-          : "bg-gradient-to-br from-gray-800 to-gray-900 hover:from-green-900/50 hover:to-emerald-900/50 border border-green-500/20 hover:border-green-500/40"
+          ? "bg-linear-to-br from-green-600 to-emerald-600 shadow-xl shadow-green-700/50"
+          : "bg-linear-to-br from-gray-800 to-gray-900 hover:from-green-900/50 hover:to-emerald-900/50 border border-green-500/20 hover:border-green-500/40"
       }`}
     >
       {/* Card Content */}
       <div className="aspect-square flex flex-col items-center justify-center p-4 relative">
         {/* Background gradient */}
-        <div className={`absolute inset-0 ${active ? "" : "bg-gradient-to-br from-green-600/20 to-emerald-600/20"}`}></div>
+        <div className={`absolute inset-0 ${active ? "" : "bg-linear-to-br from-green-600/20 to-emerald-600/20"}`}></div>
 
         {/* Icon */}
         <div className="relative z-10 text-6xl mb-4 group-hover:scale-110 transition-transform duration-300">
@@ -25,7 +25,7 @@ export default function MusicCard({ music, onPlay, active }) {
           className={`absolute bottom-4 right-4 w-12 h-12 rounded-full flex items-center justify-center text-xl transition-all duration-300 ${
             active
               ? "bg-white text-green-600 shadow-lg opacity-100"
-              : "bg-gradient-to-r from-green-600 to-emerald-600 text-white opacity-0 group-hover:opacity-100 shadow-lg shadow-green-700/50 hover:shadow-xl"
+              : "bg-linear-to-r from-green-600 to-emerald-600 text-white opacity-0 group-hover:opacity-100 shadow-lg shadow-green-700/50 hover:shadow-xl"
           }`}
         >
           {active ? "⏸" : "▶"}
@@ -33,7 +33,7 @@ export default function MusicCard({ music, onPlay, active }) {
       </div>
 
       {/* Info Section */}
-      <div className={`p-4 relative z-10 ${active ? "bg-black/20" : "bg-gradient-to-t from-gray-950 to-transparent"}`}>
+      <div className={`p-4 relative z-10 ${active ? "bg-black/20" : "bg-linear-to-t from-gray-950 to-transparent"}`}>
         <div className={`font-bold text-sm line-clamp-2 ${active ? "text-white" : "text-gray-200 group-hover:text-green-300"}`}>
           {music.title}
         </div>

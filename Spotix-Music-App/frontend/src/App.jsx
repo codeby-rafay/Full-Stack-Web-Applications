@@ -103,17 +103,17 @@ export default function App() {
   ];
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-black via-gray-950 to-black text-white overflow-hidden">
+    <div className="flex h-screen bg-linear-to-br from-black via-gray-950 to-black text-white overflow-hidden">
       {/* Animated background */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-green-600/20 to-transparent rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-emerald-600/20 to-transparent rounded-full blur-3xl animate-pulse" style={{ animationDelay: "1s" }}></div>
+        <div className="absolute top-0 right-0 w-96 h-96 bg-linear-to-bl from-green-600/20 to-transparent rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-linear-to-tr from-emerald-600/20 to-transparent rounded-full blur-3xl animate-pulse" style={{ animationDelay: "1s" }}></div>
       </div>
 
       {/* Sidebar */}
-      <div className="relative z-10 w-72 bg-gradient-to-b from-gray-900/80 to-black/80 backdrop-blur-md border-r border-green-500/20 flex flex-col p-6 overflow-y-auto">
+      <div className="relative z-10 w-72 bg-linear-to-b from-gray-900/80 to-black/80 backdrop-blur-md border-r border-green-500/20 flex flex-col p-6 overflow-y-auto">
         <div className="mb-10">
-          <h1 className="text-3xl font-black bg-gradient-to-r from-green-400 via-emerald-400 to-green-300 bg-clip-text text-transparent">
+          <h1 className="text-3xl font-black bg-linear-to-r from-green-400 via-emerald-400 to-green-300 bg-clip-text text-transparent">
             Spotix
           </h1>
           <p className="text-xs text-green-300/60 mt-1">Music redefined</p>
@@ -126,7 +126,7 @@ export default function App() {
               onClick={() => setPage(item.id)}
               className={`w-full text-left px-4 py-3 rounded-lg transition-all duration-300 ${
                 page === item.id
-                  ? "bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-lg shadow-green-500/30"
+                  ? "bg-linear-to-r from-green-600 to-emerald-600 text-white shadow-lg shadow-green-500/30"
                   : "text-gray-300 hover:bg-gray-800/50 hover:text-white"
               }`}
             >
@@ -137,7 +137,7 @@ export default function App() {
         </nav>
 
         <div className="pt-6 border-t border-green-500/20 mt-auto">
-          <div className="bg-gradient-to-r from-green-600/10 to-emerald-600/10 rounded-lg p-4 text-center">
+          <div className="bg-linear-to-r from-green-600/10 to-emerald-600/10 rounded-lg p-4 text-center">
             <p className="text-xs text-green-200">Now Playing</p>
             <p className="text-sm font-semibold mt-1">{currentTrack?.title || "Your Vibe"}</p>
           </div>
