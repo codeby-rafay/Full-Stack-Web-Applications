@@ -7,7 +7,7 @@ export default function Home({ musics = mockMusics, onPlay, currentTrack }) {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-12">
-          <h1 className="text-5xl font-black mb-2 bg-gradient-to-r from-green-400 via-emerald-400 to-green-300 bg-clip-text text-transparent">
+          <h1 className="text-5xl font-black mb-2 bg-linear-to-r from-green-400 via-emerald-400 to-green-300 bg-clip-text text-transparent">
             Welcome to Spotix
           </h1>
           <p className="text-gray-400 text-lg">Discover your next favorite track</p>
