@@ -61,9 +61,9 @@ export default function Home({ musics = mockMusics, onPlay, currentTrack }) {
             {mockAlbums.map((a) => (
               <div
                 key={a._id}
-                className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-green-900/30 to-emerald-900/30 hover:from-green-900/50 hover:to-emerald-900/50 p-6 transition-all duration-300 border border-green-500/20 hover:border-green-500/40 cursor-pointer"
+                className="group relative overflow-hidden rounded-xl bg-linear-to-br from-green-900/30 to-emerald-900/30 hover:from-green-900/50 hover:to-emerald-900/50 p-6 transition-all duration-300 border border-green-500/20 hover:border-green-500/40 cursor-pointer"
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-green-600/10 to-emerald-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="absolute inset-0 bg-linear-to-br from-green-600/10 to-emerald-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 <div className="relative z-10">
                   <div className="text-5xl mb-4">💿</div>
                   <div className="font-bold text-lg text-white mb-1 group-hover:text-green-300 transition">
