@@ -51,7 +51,7 @@ export default function PlayerBar({
         {/* Controls */}
         <div className="flex items-center gap-4">
           <button
-            className="p-2 hover:bg-slate-800/50 rounded-full transition-all duration-300 text-gray-400 hover:text-gray-200"
+            className="p-2 hover:bg-slate-800/50 rounded-full cursor-pointer transition-all duration-300 text-gray-400 hover:text-gray-200"
             title="Previous"
           >
             <span className="text-xl">⏮</span>
@@ -59,13 +59,13 @@ export default function PlayerBar({
 
           <button
             onClick={onToggle}
-            className="w-14 h-14 rounded-full bg-linear-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white flex items-center justify-center shadow-lg shadow-green-500/50 hover:shadow-xl hover:shadow-green-500/70 transition-all duration-300 transform hover:scale-110"
+            className="w-14 h-14 rounded-full cursor-pointer bg-linear-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white flex items-center justify-center shadow-lg shadow-green-500/50 hover:shadow-xl hover:shadow-green-500/70 transition-all duration-300 transform hover:scale-110"
           >
             <span className="text-2xl">{isPlaying ? "⏸" : "▶"}</span>
           </button>
 
           <button
-            className="p-2 hover:bg-slate-800/50 rounded-full transition-all duration-300 text-gray-400 hover:text-gray-200"
+            className="p-2 hover:bg-slate-800/50 rounded-full cursor-pointer transition-all duration-300 text-gray-400 hover:text-gray-200"
             title="Next"
           >
             <span className="text-xl">⏭</span>

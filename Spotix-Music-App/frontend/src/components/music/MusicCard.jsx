@@ -22,7 +22,7 @@ export default function MusicCard({ music, onPlay, active }) {
 
         {/* Play Button */}
         <button
-          className={`absolute bottom-4 right-4 w-12 h-12 rounded-full flex items-center justify-center text-xl transition-all duration-300 ${
+          className={`absolute bottom-4 right-4 w-12 h-12 rounded-full flex items-center cursor-pointer justify-center text-xl transition-all duration-300 ${
             active
               ? "bg-white text-green-600 shadow-lg opacity-100"
               : "bg-linear-to-r from-green-600 to-emerald-600 text-white opacity-0 group-hover:opacity-100 shadow-lg shadow-green-700/50 hover:shadow-xl"
