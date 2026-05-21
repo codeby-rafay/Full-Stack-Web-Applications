@@ -5,6 +5,7 @@ const {
   getSignups,
   deleteSignup,
   login,
+  refreshToken,
   getProfile,
   updateProfile,
   deleteAccount,
@@ -12,6 +13,7 @@ const {
   verifyOTP,
   resetPassword,
   logout,
+  logoutAll,
   checkAuth,
 } = require("../controllers/auth.controller");
 const {
@@ -23,7 +25,11 @@ const {
   resetPasswordValidationRules,
   updateProfileValidationRules,
 } = require("../middlewares/validation.middleware");
-const { authUser, authAdmin, authAny } = require("../middlewares/auth.middleware");
+const {
+  authUser,
+  authAdmin,
+  authAny,
+} = require("../middlewares/auth.middleware");
 
 const router = express.Router();
 
@@ -40,17 +46,21 @@ router.put(
   updateProfileValidationRules,
   updateProfile,
 );
-router.delete("/auth/delete-account", authUser, deleteAccount);
+router.delete("/auth/delete-account", authAny, deleteAccount);
 
-router.post("/auth/send-otp", authUser, sendOTPValidationRules, sendOTP);
-router.post("/auth/verify-otp", authUser, verifyOTPValidationRules, verifyOTP);
+router.post("/auth/send-otp", sendOTPValidationRules, sendOTP);
+router.post("/auth/verify-otp", verifyOTPValidationRules, verifyOTP);
 router.post(
   "/auth/reset-password",
-  authUser,
   resetPasswordValidationRules,
   resetPassword,
 );
+
 router.post("/auth/logout", authAny, logout);
+router.post("/auth/logout-all", authAny, logoutAll);
+
 router.get("/auth/check-auth", authAny, checkAuth);
+
+router.post("/auth/refresh", refreshToken);
 
 module.exports = router;

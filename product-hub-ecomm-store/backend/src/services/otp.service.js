@@ -4,12 +4,10 @@ const nodemailer = require("nodemailer");
 // store OTPs temporarily in server memory
 const otpStore = new Map();
 
-// generate random 6-digit OTP
 const generateOTP = () => {
   return Math.floor(100000 + Math.random() * 900000).toString();
 };
 
-// send OTP via email to user
 const sendOTPEmail = async (email, otp) => {
   try {
     // configure email service
@@ -72,6 +70,18 @@ const storeOTP = (email, otp) => {
   });
 };
 
+const hasValidOTP = (email) => {
+  const stored = otpStore.get(email);
+
+  if (!stored) return false;
+
+  if (Date.now() > stored.expiresAt) {
+    otpStore.delete(email);
+    return false;
+  }
+  return true;
+};
+
 // verify OTP
 const verifyOTP = (email, otp) => {
   const stored = otpStore.get(email);
@@ -113,6 +123,7 @@ module.exports = {
   generateOTP,
   sendOTPEmail,
   storeOTP,
+  hasValidOTP,
   verifyOTP,
   clearOTP,
 };

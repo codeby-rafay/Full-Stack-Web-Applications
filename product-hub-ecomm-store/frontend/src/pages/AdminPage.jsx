@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Users, UserPlus, Trash2 } from "lucide-react";
 import { toast, Slide } from "react-toastify";
 import { DeleteRecordToast } from "../utils/toastUtils";
+import { useShop } from "../context/ShopContext";
 import axiosInstance from "../utils/axiosInstance";
 import DeleteConfirmationModal from "../components/ModalComponents/DeleteConfirmationModal";
 import UserSearchBar from "../components/SearchbarComponents/UserSearchBar";
@@ -13,6 +14,7 @@ function AdminPage() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [recordToDelete, setRecordToDelete] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const { currentUser, authReady } = useShop();
 
   const filteredUserData = userData.filter((record) => {
     if (!searchQuery.trim()) return true;
@@ -58,8 +60,12 @@ function AdminPage() {
       }
     };
 
+    if (!authReady || !currentUser?.id || currentUser?.role !== "admin") {
+      return;
+    }
+
     fetchUserData();
-  }, []);
+  }, [authReady, currentUser]);
 
   const handleSignupDelete = (id) => {
     setRecordToDelete(id);

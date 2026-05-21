@@ -38,7 +38,7 @@ const validate = (values) => {
 };
 
 function UserProfile() {
-  const { currentUser, logout, login } = useShop();
+  const { currentUser, authReady, logout, login } = useShop();
   const navigate = useNavigate();
 
   const [profileData, setProfileData] = useState(null);
@@ -47,10 +47,14 @@ function UserProfile() {
   const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
+    if (!authReady) {
+      return;
+    }
+
     if (!currentUser) {
       navigate("/login");
     }
-  }, [currentUser, navigate]);
+  }, [authReady, currentUser, navigate]);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -74,10 +78,10 @@ function UserProfile() {
       }
     };
 
-    if (currentUser) {
+    if (authReady && currentUser) {
       fetchProfile();
     }
-  }, [currentUser]);
+  }, [authReady, currentUser]);
 
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
@@ -93,7 +97,7 @@ function UserProfile() {
 
       // Update localStorage so navbar reflects the new name immediately
       const updatedUser = { ...currentUser, fullName: res.data.user.fullName };
-      login(updatedUser, null);
+      login(updatedUser, null, { refreshFromCookie: false });
 
       // Also update local state so avatar letter updates
       setProfileData((prev) => ({
@@ -170,7 +174,7 @@ function UserProfile() {
     }
   };
 
-  if (!currentUser) return null;
+  if (!authReady || !currentUser) return null;
 
   return (
     <div className="min-h-screen bg-linear-to-br from-orange-50 to-amber-50 py-10 px-4">

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { toast, Slide } from "react-toastify";
 import { MessageCircle, Trash2, Reply, X, Send, Mail } from "lucide-react";
+import { useShop } from "../context/ShopContext";
 import axiosInstance from "../utils/axiosInstance";
 import DeleteConfirmationModal from "../components/ModalComponents/DeleteConfirmationModal";
 import UserSearchBar from "../components/SearchbarComponents/UserSearchBar";
@@ -20,11 +21,16 @@ function UserFeedback() {
     replied: 0,
   });
   const [searchQuery, setSearchQuery] = useState("");
+  const { currentUser, authReady } = useShop();
 
   // Fetch all feedback
   useEffect(() => {
+    if (!authReady || !currentUser?.id || currentUser?.role !== "admin") {
+      return;
+    }
+
     fetchFeedback();
-  }, []);
+  }, [authReady, currentUser]);
 
   const fetchFeedback = async () => {
     try {
@@ -196,6 +202,19 @@ function UserFeedback() {
       <div className="flex items-center justify-center min-h-screen">
         <div className="animate-spin">
           <MessageCircle size={48} className="text-orange-500" />
+        </div>
+      </div>
+    );
+  }
+
+  if (!authReady || !currentUser?.id || currentUser?.role !== "admin") {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-linear-to-br from-orange-50 to-amber-50 p-4">
+        <div className="text-center">
+          <MessageCircle size={48} className="text-orange-500 mx-auto mb-4" />
+          <p className="text-gray-600 font-medium">
+            Please login as an admin to view feedback.
+          </p>
         </div>
       </div>
     );

@@ -7,7 +7,7 @@ import CartItems from "./CartPanelComponents/CartItems";
 import CartHeader from "./CartPanelComponents/CartHeader";
 import CartPanelFooter from "./CartPanelComponents/CartPanelFooter";
 import PaymentMethodModal from "../components/ModalComponents/PaymentMethodModal";
-import axios from "axios";
+import axiosInstance from "../utils/axiosInstance";
 
 function CartDisplay() {
   const [isOpen, setIsOpen] = useState(false);
@@ -21,6 +21,7 @@ function CartDisplay() {
     increaseQty,
     decreaseQty,
     currentUser,
+    authReady,
     setCartItems,
   } = useShop();
 
@@ -33,6 +34,19 @@ function CartDisplay() {
   };
 
   const handleCheckout = async () => {
+    if (!authReady) {
+      toast.info("Please wait while your session loads.", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: false,
+        draggable: true,
+        transition: Slide,
+      });
+      return;
+    }
+
     if (!currentUser) {
       toast.error("Please login to checkout", {
         position: "top-right",
@@ -60,6 +74,7 @@ function CartDisplay() {
     }
 
     handleClose();
+
     setTimeout(() => {
       setShowPaymentModal(true);
     }, 300);
@@ -92,15 +107,7 @@ function CartDisplay() {
         notes,
       };
 
-      const response = await axios.post(
-        "http://localhost:3000/api/orders",
-        orderData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        },
-      );
+      const response = await axiosInstance.post("/orders", orderData);
 
       if (response.data?.order) {
         const successMsg =

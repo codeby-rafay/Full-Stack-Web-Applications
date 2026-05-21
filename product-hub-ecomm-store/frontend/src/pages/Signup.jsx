@@ -34,18 +34,15 @@ function Signup() {
         const token = response.credential;
 
         // send token to backend using axios
-        const res = await axiosInstance.post("/auth/google-login", {
-          token,
-        });
-
+        const res = await axiosInstance.post("/auth/google-login", { token });
         const data = res.data;
 
-        if (!data?.user || !data?.token) {
+        if (!data?.user) {
           throw new Error("Invalid server response");
         }
 
-        // Save user info using our login function from context
-        login(data.user, data.token);
+        // Save user info and hydrate access token from the refresh cookie
+        await login(data.user);
 
         Welcometoast(data.user);
 
@@ -72,7 +69,7 @@ function Signup() {
         );
       }
     },
-    [login, navigate, Welcometoast],
+    [login, navigate],
   );
 
   // Initialize Google Sign-In globally (only once)
@@ -144,7 +141,7 @@ function Signup() {
     try {
       setLoading(true);
 
-      const response = await axiosInstance.post("/auth/signup", {
+      await axiosInstance.post("/auth/signup", {
         fullName: formData.fullName.trim(),
         email: formData.email,
         password: formData.password,

@@ -17,7 +17,7 @@ import axiosInstance from "../utils/axiosInstance";
 import DeleteConfirmationModal from "../components/ModalComponents/DeleteConfirmationModal";
 
 const ReviewOrdersUser = () => {
-  const { currentUser } = useShop();
+  const { currentUser, authReady } = useShop();
   const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -28,7 +28,7 @@ const ReviewOrdersUser = () => {
 
   useEffect(() => {
     const fetchOrders = async () => {
-      if (!currentUser) return;
+      if (!authReady || !currentUser) return;
       setLoading(true);
       try {
         const response = await axiosInstance.get(
@@ -51,7 +51,7 @@ const ReviewOrdersUser = () => {
     };
 
     fetchOrders();
-  }, [currentUser]);
+  }, [authReady, currentUser]);
 
   const getPaymentStatusColor = (status) => {
     const colors = {
@@ -139,7 +139,7 @@ const ReviewOrdersUser = () => {
     return orders.filter((order) => order.orderStatus === "delivered").length;
   }, [orders]);
 
-  if (!currentUser) {
+  if (!authReady || !currentUser) {
     return (
       <div className="min-h-screen bg-linear-to-br from-orange-50 to-amber-50 flex items-center justify-center p-4">
         <div className="text-center">

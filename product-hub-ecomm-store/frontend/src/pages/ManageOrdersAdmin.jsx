@@ -1,6 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
 import { DeleteOrderToast, FailedToLoadOrdersToast } from "../utils/toastUtils";
-import { useNavigate } from "react-router-dom";
 import {
   Package,
   User,
@@ -12,6 +11,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { toast, Slide } from "react-toastify";
+import { useShop } from "../context/ShopContext";
 import axiosInstance from "../utils/axiosInstance";
 import OrderSearchBar from "../components/SearchbarComponents/OrderSearchBar";
 import DeleteConfirmationModal from "../components/ModalComponents/DeleteConfirmationModal";
@@ -24,7 +24,7 @@ const ManageOrdersAdmin = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [orderToDelete, setOrderToDelete] = useState(null);
-  const navigate = useNavigate();
+  const { currentUser, authReady } = useShop();
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -38,8 +38,12 @@ const ManageOrdersAdmin = () => {
   };
 
   useEffect(() => {
+    if (!authReady || !currentUser?.id || currentUser?.role !== "admin") {
+      return;
+    }
+
     fetchOrders();
-  }, []);
+  }, [authReady, currentUser]);
 
   const fetchOrders = async () => {
     try {
@@ -231,6 +235,19 @@ const ManageOrdersAdmin = () => {
             className="animate-spin text-orange-500 mx-auto mb-4"
           />
           <p className="text-gray-600 font-medium">Loading orders...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!authReady || !currentUser?.id || currentUser?.role !== "admin") {
+    return (
+      <div className="min-h-screen bg-linear-to-br from-orange-50 to-amber-50 flex items-center justify-center p-4">
+        <div className="text-center">
+          <AlertCircle size={48} className="text-orange-500 mx-auto mb-4" />
+          <p className="text-gray-600 font-medium">
+            Please login as an admin to view orders.
+          </p>
         </div>
       </div>
     );

@@ -14,6 +14,7 @@ import {
 function Login() {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { login } = useShop();
@@ -24,25 +25,20 @@ function Login() {
         const token = response.credential;
 
         // send token to backend using axios
-        const res = await axiosInstance.post("/auth/google-login", {
-          token,
-        });
-
+        const res = await axiosInstance.post("/auth/google-login", { token });
         const data = res.data;
 
-        if (!data?.user || !data?.token) {
+        if (!data?.user) {
           throw new Error("Invalid server response");
         }
 
-        // Save user info using our login function from context
-        login(data.user, data.token);
+        // Save user info and set the access token immediately
+        await login(data.user, data.accessToken);
 
         Welcometoast(data.user);
 
-        setTimeout(() => {
-          window.scrollTo(0, 0);
-          navigate("/");
-        }, 100);
+        window.scrollTo({ top: 0, behavior: "auto" });
+        navigate("/");
       } catch (error) {
         toast.error(
           error.response?.data?.message ||
@@ -61,7 +57,7 @@ function Login() {
         );
       }
     },
-    [login, navigate, Welcometoast],
+    [login, navigate],
   );
 
   // Initialize Google Sign-In globally (only once)
@@ -96,27 +92,24 @@ function Login() {
 
       const data = response.data;
 
-      if (!data?.user || !data?.token) {
+      if (!data?.user) {
         throw new Error("Invalid server response");
       }
 
       // login successful
-      // Save user info using our login function from context
-      // This saves the user to localStorage so they stay logged in
-      login(data.user, data.token);
+      // Save user info and set the access token immediately
+      await login(data.user, data.accessToken);
 
       Welcometoast(data.user);
 
       setFormData({ email: "", password: "" });
 
-      setTimeout(() => {
-        window.scrollTo(0, 0);
-        if (data.user.role === "admin") {
-          navigate("/admin/dashboard");
-        } else {
-          navigate("/");
-        }
-      }, 100);
+      window.scrollTo({ top: 0, behavior: "auto" });
+      if (data.user.role === "admin") {
+        navigate("/admin/dashboard");
+      } else {
+        navigate("/");
+      }
     } catch (error) {
       toast.error(
         error.response?.data?.message ||
@@ -226,7 +219,12 @@ function Login() {
 
             {/* Remember Me */}
             <div className="flex items-center">
-              <input type="checkbox" id="remember" />
+              <input
+                type="checkbox"
+                id="remember"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+              />
               <label
                 htmlFor="remember"
                 className="ml-2 text-sm text-gray-600 cursor-pointer"

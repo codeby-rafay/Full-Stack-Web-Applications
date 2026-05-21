@@ -1,8 +1,18 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+} from "react";
 import { toast, Slide } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { SessionExpiredToast } from "../utils/toastUtils";
-import axiosInstance from "../utils/axiosInstance";
+import axiosInstance, {
+  clearAccessToken,
+  registerSessionExpiredHandler,
+  setAccessToken,
+} from "../utils/axiosInstance";
 
 const ShopContext = createContext();
 
@@ -11,53 +21,98 @@ export const useShop = () => useContext(ShopContext);
 export function ShopProvider({ children }) {
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const verifyUser = async () => {
-      if (!currentUser) return;
-
-      try {
-        await axiosInstance.get("/auth/check-auth");
-      } catch (error) {
-        logout();
-
-        setTimeout(() => {
-          navigate("/login", { replace: true });
-        }, 800);
-
-        SessionExpiredToast();
-      }
-    };
-    verifyUser();
-  }, []);
-
-  // if user is already logged in or not
   const [currentUser, setCurrentUser] = useState(() => {
     const savedUser = localStorage.getItem("currentUser");
     return savedUser ? JSON.parse(savedUser) : null;
   });
+  const [authReady, setAuthReady] = useState(() => !currentUser);
 
-  const [tokenExpiry, setTokenExpiry] = useState(null);
-
-  // each user gets separate data
   const getCartKey = (userId) => `cart_${userId}`;
   const getSavedItemsKey = (userId) => `savedItems_${userId}`;
 
-  // this function runs after user successful login
-  const login = (userData, token) => {
-    // Save user data to localStorage (token stays in the httpOnly cookie)
+  const hydrateAccessTokenFromCookie = useCallback(async () => {
+    const res = await axiosInstance.post("/auth/refresh");
+    const token = res.data?.accessToken;
+
+    if (!token) {
+      throw new Error("Refresh response did not include an access token");
+    }
+
+    setAccessToken(token);
+    return token;
+  }, []);
+
+  const clearSessionState = useCallback(() => {
+    localStorage.removeItem("currentUser");
+    clearAccessToken();
+    setCurrentUser(null);
+    setCartItems([]);
+    setSavedItems([]);
+    setUnreadNotificationCount(0);
+    setAuthReady(true);
+  }, []);
+
+  const handleSessionExpired = useCallback(() => {
+    clearSessionState();
+    navigate("/login", { replace: true });
+  }, [clearSessionState, navigate]);
+
+  useEffect(() => {
+    registerSessionExpiredHandler(handleSessionExpired);
+
+    return () => {
+      registerSessionExpiredHandler(null);
+    };
+  }, [handleSessionExpired]);
+
+  const bootstrappedSessionRef = useRef(false);
+
+  useEffect(() => {
+    if (bootstrappedSessionRef.current) return;
+
+    bootstrappedSessionRef.current = true;
+
+    if (!currentUser) {
+      setAuthReady(true);
+      return;
+    }
+
+    const restoreSession = async () => {
+      try {
+        await hydrateAccessTokenFromCookie();
+      } catch (error) {
+        console.error("Failed to restore session on app load:", error);
+        handleSessionExpired();
+      } finally {
+        setAuthReady(true);
+      }
+    };
+
+    restoreSession();
+  }, [currentUser, handleSessionExpired, hydrateAccessTokenFromCookie]);
+
+  const login = async (userData, token, options = {}) => {
+    const { refreshFromCookie = !token } = options;
+
     localStorage.setItem("currentUser", JSON.stringify(userData));
     setCurrentUser(userData);
 
     if (token) {
+      setAccessToken(token);
+      setAuthReady(true);
+    } else if (refreshFromCookie) {
       try {
-        const decoded = JSON.parse(atob(token.split(".")[1]));
-        setTokenExpiry(decoded.exp * 1000);
+        await hydrateAccessTokenFromCookie();
       } catch (error) {
-        throw error || new Error("Failed to schedule session expiry");
+        console.error("Failed to refresh access token after login:", error);
+        handleSessionExpired();
+      } finally {
+        setAuthReady(true);
       }
+    } else {
+      setAuthReady(true);
     }
 
-    // restore user-specific data
     const userCart = localStorage.getItem(getCartKey(userData.id));
     const userSavedItems = localStorage.getItem(getSavedItemsKey(userData.id));
 
@@ -65,61 +120,47 @@ export function ShopProvider({ children }) {
     setSavedItems(userSavedItems ? JSON.parse(userSavedItems) : []);
   };
 
-  // called when user Sign out
   const logout = async () => {
     try {
       await axiosInstance.post("/auth/logout");
     } catch (error) {
-      toast.error("Error occurred while logging out.", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: false,
-        draggable: true,
-        transition: Slide,
-      });
+      if (error.response?.status === 401) {
+        try {
+          const refreshResponse = await axiosInstance.post("/auth/refresh");
+          const refreshedToken = refreshResponse.data?.accessToken;
+
+          if (refreshedToken) {
+            setAccessToken(refreshedToken);
+            await axiosInstance.post("/auth/logout");
+          }
+        } catch (refreshError) {
+          console.error("Failed to refresh token during logout:", refreshError);
+          toast.error("Error occurred while logging out.", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: false,
+            draggable: true,
+            transition: Slide,
+          });
+        }
+      } else {
+        toast.error("Error occurred while logging out.", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: false,
+          draggable: true,
+          transition: Slide,
+        });
+      }
     }
 
-    localStorage.removeItem("currentUser");
-
-    setCurrentUser(null);
-
-    setCartItems([]);
-
-    setSavedItems([]);
+    clearSessionState();
   };
 
-  // auto logout when token expires
-  useEffect(() => {
-    if (!tokenExpiry) return;
-
-    const timeLeft = Number(tokenExpiry) - Date.now();
-
-    if (timeLeft <= 0) {
-      logout();
-
-      setTimeout(() => {
-        navigate("/login", { replace: true });
-      }, 800);
-
-      return;
-    }
-
-    const timer = setTimeout(() => {
-      SessionExpiredToast();
-
-      logout();
-
-      setTimeout(() => {
-        navigate("/login", { replace: true });
-      }, 800);
-    }, timeLeft);
-
-    return () => clearTimeout(timer);
-  }, [currentUser, tokenExpiry]);
-
-  // cart state
   const [cartItems, setCartItems] = useState(() => {
     const savedUser = localStorage.getItem("currentUser");
     if (!savedUser) return [];
@@ -128,7 +169,6 @@ export function ShopProvider({ children }) {
     return saved ? JSON.parse(saved) : [];
   });
 
-  // saved items state
   const [savedItems, setSavedItems] = useState(() => {
     const savedUser = localStorage.getItem("currentUser");
     if (!savedUser) return [];
@@ -137,31 +177,35 @@ export function ShopProvider({ children }) {
     return saved ? JSON.parse(saved) : [];
   });
 
-  // unread notifications count
   const [unreadNotificationCount, setUnreadNotificationCount] = useState(0);
 
-  // Fetch unread notification count periodically
   useEffect(() => {
-    if (!currentUser?.id || currentUser?.role !== "user") return;
+    if (!authReady || !currentUser?.id || currentUser?.role !== "user") return;
 
     const fetchUnreadCount = async () => {
       try {
+        await hydrateAccessTokenFromCookie();
         const response = await axiosInstance.get(
           `/notifications/${currentUser.id}`,
         );
         setUnreadNotificationCount(response.data.unreadCount || 0);
       } catch (error) {
-        throw error || new Error("Failed to fetch unread notifications");
+        if (error.response?.status !== 401) {
+          throw error || new Error("Failed to fetch unread notifications");
+        }
       }
     };
 
-    // Fetch on mount
     fetchUnreadCount();
 
-    // Fetch every 15 seconds
     const interval = setInterval(fetchUnreadCount, 15000);
     return () => clearInterval(interval);
-  }, [currentUser?.id, currentUser?.role]);
+  }, [
+    authReady,
+    currentUser?.id,
+    currentUser?.role,
+    hydrateAccessTokenFromCookie,
+  ]);
 
   useEffect(() => {
     if (currentUser) {
@@ -243,6 +287,7 @@ export function ShopProvider({ children }) {
     <ShopContext.Provider
       value={{
         currentUser,
+        authReady,
         login,
         logout,
         cartItems,

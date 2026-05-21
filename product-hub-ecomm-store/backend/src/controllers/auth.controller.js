@@ -1,5 +1,6 @@
 const OAuth2Client = require("google-auth-library").OAuth2Client;
 const signupModel = require("../models/signup.model");
+const sessionModel = require("../models/session.model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const {
@@ -8,6 +9,7 @@ const {
   storeOTP,
   verifyOTP: verifyOTPUtil,
   clearOTP,
+  hasValidOTP,
 } = require("../services/otp.service");
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
@@ -90,34 +92,45 @@ async function googleLogin(req, res) {
       });
     }
 
-    // JWT token
-    const jwtToken = jwt.sign(
+    const refreshToken = jwt.sign({ id: user._id }, JWT_SECRET, {
+      expiresIn: "7d",
+    });
+
+    const refreshTokenHash = await bcrypt.hash(refreshToken, 10);
+
+    const session = await sessionModel.create({
+      user: user._id,
+      refreshTokenHash,
+      ip: req.ip,
+      userAgent: req.get("User-Agent"),
+    });
+
+    const accessToken = jwt.sign(
       {
         id: user._id,
-        fullName: user.fullName,
-        email: user.email,
+        sessionId: session._id,
         role: user.role || "user",
       },
       JWT_SECRET,
-      { expiresIn: "3h" },
+      { expiresIn: "15m" },
     );
 
-    res.cookie("authToken", jwtToken, {
+    res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      secure: false,
-      sameSite: "lax",
-      maxAge: 3 * 60 * 60 * 1000, // 3 hours
+      secure: true,
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     res.json({
       message: "Google login successful!",
-      token: jwtToken,
       user: {
         id: user._id,
         fullName: user.fullName,
         email: user.email,
         role: user.role || "user",
       },
+      accessToken,
     });
   } catch (error) {
     console.error("Google login error:", error.message || error);
@@ -143,6 +156,7 @@ async function signup(req, res) {
       // If the account was previously deleted, reactivate it with new info
       if (existingUser.deletedAccount) {
         const hashedPassword = await bcrypt.hash(password, 10);
+
         const reactivated = await signupModel.findOneAndUpdate(
           { email },
           {
@@ -155,35 +169,24 @@ async function signup(req, res) {
           { returnDocument: "after" },
         );
 
-        const token = jwt.sign(
-          {
-            id: reactivated._id,
-            fullName: reactivated.fullName,
-            email: reactivated.email,
-            role: reactivated.role || "user",
-          },
-          JWT_SECRET,
-          { expiresIn: "3h" },
-        );
-
-        res.cookie("authToken", token, {
-          httpOnly: true,
-          secure: false,
-          sameSite: "lax",
-          maxAge: 3 * 60 * 60 * 1000,
-        });
-
         return res.status(201).json({
-          message: "Account created successfully!",
+          message: "Account created successfully! Please login.",
           user: {
             id: reactivated._id,
             fullName: reactivated.fullName,
             email: reactivated.email,
             role: reactivated.role || "user",
           },
-          token,
         });
       }
+
+      if (!existingUser.password && existingUser.googleId) {
+        return res.status(400).json({
+          message:
+            "This email is registered with Google Sign-In. Please continue with Google.",
+        });
+      }
+
       return res
         .status(400)
         .json({ message: "This email is already registered. Please login." });
@@ -197,33 +200,14 @@ async function signup(req, res) {
       password: hashedPassword,
     });
 
-    const token = jwt.sign(
-      {
-        id: createdUser._id,
-        fullName: createdUser.fullName,
-        email: createdUser.email,
-        role: createdUser.role || "user",
-      },
-      JWT_SECRET,
-      { expiresIn: "3h" },
-    );
-
-    res.cookie("authToken", token, {
-      httpOnly: true,
-      secure: false,
-      sameSite: "lax",
-      maxAge: 3 * 60 * 60 * 1000,
-    });
-
     res.status(201).json({
-      message: "Account created successfully!",
+      message: "Account created successfully! Please login.",
       user: {
         id: createdUser._id,
         fullName: createdUser.fullName,
         email: createdUser.email,
         role: createdUser.role || "user",
       },
-      token,
     });
   } catch (error) {
     console.error("Signup error:", error);
@@ -303,26 +287,38 @@ async function login(req, res) {
       });
     }
 
+    const refreshToken = jwt.sign({ id: user._id }, JWT_SECRET, {
+      expiresIn: "7d",
+    });
+
+    const refreshTokenHash = await bcrypt.hash(refreshToken, 10);
+
+    const session = await sessionModel.create({
+      user: user._id,
+      refreshTokenHash,
+      ip: req.ip,
+      userAgent: req.get("User-Agent"),
+    });
+
     // login token creation
-    const token = jwt.sign(
+    const accessToken = jwt.sign(
       {
         id: user._id,
-        fullName: user.fullName,
-        email: user.email,
+        sessionId: session._id,
         role: user.role,
       },
       JWT_SECRET,
-      { expiresIn: "3h" },
+      { expiresIn: "15m" },
     );
 
-    res.cookie("authToken", token, {
+    res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      secure: false,
-      sameSite: "lax",
-      maxAge: 3 * 60 * 60 * 1000,
+      secure: true,
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    res.json({
+    res.status(200).json({
       message: "Login successful!",
       user: {
         id: user._id,
@@ -330,11 +326,88 @@ async function login(req, res) {
         email: user.email,
         role: user.role,
       },
-      token,
+      accessToken,
     });
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).json({ message: "Error logging in. Please try again." });
+  }
+}
+
+// Refresh Access Token
+async function refreshToken(req, res) {
+  const refreshToken = req.cookies.refreshToken;
+
+  if (!refreshToken) {
+    return res.status(401).json({ message: "Refresh token not found" });
+  }
+
+  try {
+    // Step 1: Verify the refresh token signature and expiry
+    const decoded = jwt.verify(refreshToken, JWT_SECRET);
+
+    // Step 2: Find the user
+    const user = await signupModel.findById(decoded.id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Step 3: Find all active sessions for this user
+    const sessions = await sessionModel.find({
+      user: decoded.id,
+      revoked: false,
+    });
+
+    // Step 4: Find the session whose hash matches this refresh token
+    let matchedSession = null;
+    for (const session of sessions) {
+      const isMatch = await bcrypt.compare(
+        refreshToken,
+        session.refreshTokenHash,
+      );
+      if (isMatch) {
+        matchedSession = session;
+        break;
+      }
+    }
+
+    if (!matchedSession) {
+      return res.status(401).json({ message: "Invalid refresh token" });
+    }
+
+    // Step 5: Issue a new access token
+    const accessToken = jwt.sign(
+      { id: user._id, sessionId: matchedSession._id, role: user.role },
+      JWT_SECRET,
+      { expiresIn: "15m" },
+    );
+
+    // Step 6: Rotate the refresh token (new refresh token replaces the old one)
+    const newRefreshToken = jwt.sign({ id: user._id }, JWT_SECRET, {
+      expiresIn: "7d",
+    });
+    const newRefreshTokenHash = await bcrypt.hash(newRefreshToken, 10);
+
+    matchedSession.refreshTokenHash = newRefreshTokenHash;
+    await matchedSession.save();
+
+    // Step 7: Set new refresh token in httpOnly cookie
+    res.cookie("refreshToken", newRefreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    res.status(200).json({
+      message: "Access token refreshed successfully",
+      accessToken,
+    });
+  } catch (error) {
+    console.error("Refresh token error:", error);
+    res.status(401).json({
+      message: "Invalid or expired refresh token",
+    });
   }
 }
 
@@ -432,10 +505,16 @@ async function deleteAccount(req, res) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    res.clearCookie("authToken", {
+    // Revoke all sessions for this user after account deletion.
+    await sessionModel.updateMany(
+      { user: userId, revoked: false },
+      { revoked: true },
+    );
+
+    res.clearCookie("refreshToken", {
       httpOnly: true,
-      secure: false,
-      sameSite: "lax",
+      secure: true,
+      sameSite: "strict",
     });
 
     res.status(200).json({
@@ -463,6 +542,14 @@ async function sendOTP(req, res) {
         .json({ message: "User not found with this email" });
     }
 
+    // Prevent spamming OTPs: if a valid OTP already exists, ask user to wait
+    if (hasValidOTP(email)) {
+      return res.status(429).json({
+        message:
+          "An OTP was recently sent. Please check your email or wait before requesting another.",
+      });
+    }
+
     // Generate OTP
     const otp = generateOTP();
 
@@ -472,9 +559,7 @@ async function sendOTP(req, res) {
     // Store OTP in memory (with expiration)
     storeOTP(email, otp);
 
-    res.status(200).json({
-      message: "OTP sent successfully to your email",
-    });
+    res.status(200).json({ message: "OTP sent successfully to your email" });
   } catch (error) {
     console.error("Send OTP error:", error);
     res.status(500).json({
@@ -498,6 +583,9 @@ async function verifyOTP(req, res) {
     if (!verification.valid) {
       return res.status(400).json({ message: verification.message });
     }
+
+    // Clear OTP after successful verification to prevent reuse
+    clearOTP(email);
 
     res.status(200).json({
       message: "OTP verified successfully",
@@ -556,30 +644,92 @@ async function resetPassword(req, res) {
 
 // Logout
 async function logout(req, res) {
-  res.clearCookie("authToken", {
-    httpOnly: true,
-    secure: false,
-    sameSite: "lax",
-  });
+  const refreshToken = req.cookies.refreshToken;
 
-  res.status(200).json({
-    message: "Logout successfully",
-  });
+  // Even if there's no refresh token, logout is successful (user state already cleared on frontend)
+  if (!refreshToken) {
+    res.clearCookie("refreshToken");
+    return res.status(200).json({ message: "Logged out successfully" });
+  }
+
+  try {
+    const decoded = jwt.verify(refreshToken, JWT_SECRET);
+
+    const sessions = await sessionModel.find({
+      user: decoded.id,
+      revoked: false,
+    });
+
+    let matchedSession = null;
+
+    for (const session of sessions) {
+      const isMatch = await bcrypt.compare(
+        refreshToken,
+        session.refreshTokenHash,
+      );
+
+      if (isMatch) {
+        matchedSession = session;
+        break;
+      }
+    }
+
+    if (matchedSession) {
+      matchedSession.revoked = true;
+      await matchedSession.save();
+    }
+
+    res.clearCookie("refreshToken");
+    res.status(200).json({ message: "Logged out successfully" });
+  } catch (error) {
+    // Even if token is invalid, consider it a successful logout
+    res.clearCookie("refreshToken");
+    res.status(200).json({ message: "Logged out successfully" });
+  }
+}
+
+// Logout from all sessions
+async function logoutAll(req, res) {
+  const refreshToken = req.cookies.refreshToken;
+
+  // Even if there's no refresh token, logout is successful
+  if (!refreshToken) {
+    res.clearCookie("refreshToken");
+    return res
+      .status(200)
+      .json({ message: "Logged out of all devices successfully" });
+  }
+
+  try {
+    const decoded = jwt.verify(refreshToken, JWT_SECRET);
+
+    await sessionModel.updateMany(
+      { user: decoded.id, revoked: false },
+      { revoked: true },
+    );
+
+    res.clearCookie("refreshToken");
+    res.status(200).json({ message: "Logged out of all devices successfully" });
+  } catch (error) {
+    // Even if token is invalid, consider it a successful logout
+    res.clearCookie("refreshToken");
+    res.status(200).json({ message: "Logged out of all devices successfully" });
+  }
 }
 
 // Check if user is authenticated (for frontend, when the page loads to confirm the user session is valid.)
 async function checkAuth(req, res) {
   try {
-    const token = req.cookies.authToken;
+    const token = req.headers.authorization?.split(" ")[1];
 
     if (!token) {
       return res.status(401).json({
         authenticated: false,
-        message: "No token provided. Please login.",
+        message: "No access token provided. Please login.",
       });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, JWT_SECRET);
 
     res.status(200).json({
       authenticated: true,
@@ -601,6 +751,7 @@ module.exports = {
   getSignups,
   deleteSignup,
   login,
+  refreshToken,
   getProfile,
   updateProfile,
   deleteAccount,
@@ -608,5 +759,6 @@ module.exports = {
   verifyOTP,
   resetPassword,
   logout,
+  logoutAll,
   checkAuth,
 };

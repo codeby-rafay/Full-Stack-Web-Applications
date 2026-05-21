@@ -1,7 +1,12 @@
 const jwt = require("jsonwebtoken");
 
+const extractToken = (req) => {
+  const token = req.headers.authorization?.split(" ")[1];
+  return token || null;
+};
+
 const authAdmin = async (req, res, next) => {
-  const token = req.cookies.authToken;
+  const token = extractToken(req);
   if (!token) {
     return res.status(401).json({ message: "Unauthorized" });
   }
@@ -20,7 +25,7 @@ const authAdmin = async (req, res, next) => {
 };
 
 const authUser = async (req, res, next) => {
-  const token = req.cookies.authToken;
+  const token = extractToken(req);
   if (!token) {
     return res.status(401).json({ message: "Unauthorized" });
   }
@@ -39,7 +44,7 @@ const authUser = async (req, res, next) => {
 };
 
 const authAny = async (req, res, next) => {
-  const token = req.cookies.authToken;
+  const token = extractToken(req);
   if (!token) {
     return res.status(401).json({ message: "Unauthorized" });
   }
@@ -55,5 +60,5 @@ const authAny = async (req, res, next) => {
 module.exports = {
   authAdmin,
   authUser,
-  authAny
+  authAny,
 };

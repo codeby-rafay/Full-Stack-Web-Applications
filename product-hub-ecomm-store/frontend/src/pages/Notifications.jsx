@@ -11,6 +11,7 @@ const Notifications = () => {
   const [loading, setLoading] = useState(true);
   const {
     currentUser: user,
+    authReady,
     unreadNotificationCount,
     setUnreadNotificationCount,
   } = useShop();
@@ -206,10 +207,10 @@ const Notifications = () => {
 
   // Fetch notifications on component mount
   useEffect(() => {
-    if (!user?.id) return;
+    if (!authReady || !user?.id) return;
 
     fetchNotifications();
-  }, [user?.id]);
+  }, [authReady, user?.id]);
 
   const getNotificationStyle = (type) => {
     const styles = {
