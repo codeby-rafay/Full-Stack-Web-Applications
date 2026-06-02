@@ -2,7 +2,7 @@ import { useState, useCallback } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Mail, Lock, Eye, EyeOff, AlignCenter } from "lucide-react";
 import { toast, Slide } from "react-toastify";
-import { useShop } from "../context/ShopContext";
+import { useAuthService } from "../context/AuthServiceContext";
 import { useGoogleSignIn } from "../hooks/useGoogleSignIn";
 import axiosInstance from "../utils/axiosInstance";
 import {
@@ -17,7 +17,7 @@ function Login() {
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { login } = useShop();
+  const { login } = useAuthService();
 
   const handleGoogleResponse = useCallback(
     async (response) => {

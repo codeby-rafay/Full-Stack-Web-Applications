@@ -1,10 +1,11 @@
 import { ShoppingCart, Check } from "lucide-react";
-import { useShop } from "../../context/ShopContext";
+import { useCart, useAuth } from "../../redux/hooks";
 import { useNavigate } from "react-router-dom";
 import { addtocartToast } from "../../utils/toastUtils";
 
 const AddtoCartBtn = ({ product }) => {
-  const { addToCart, isInCart, currentUser } = useShop();
+  const { addToCart, isInCart } = useCart();
+  const { currentUser } = useAuth();
   const navigate = useNavigate();
 
   const alreadyInCart = isInCart(product?.id);

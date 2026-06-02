@@ -9,12 +9,15 @@ import {
   Cuboid,
   UserPen,
 } from "lucide-react";
-import { useShop } from "../../context/ShopContext";
+import { useAuth, useSavedItems, useNotification } from "../../redux/hooks";
+import { useAuthService } from "../../context/AuthServiceContext";
 import { LogoutToast } from "../../utils/toastUtils";
 
 const DesktopNavLinks = ({ navLinks, isActive }) => {
-  const { currentUser, logout, savedItems, unreadNotificationCount } =
-    useShop();
+  const { logout } = useAuthService();
+  const { currentUser } = useAuth();
+  const { savedItems } = useSavedItems();
+  const { unreadCount: unreadNotificationCount } = useNotification();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const navigate = useNavigate();
   const dropdownRef = useRef(null); // This ref is used to detect clicks outside the dropdown, to close it

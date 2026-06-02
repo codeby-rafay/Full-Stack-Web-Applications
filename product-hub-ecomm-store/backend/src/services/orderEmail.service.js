@@ -48,7 +48,7 @@ function orderPlacedEmail(userName, userEmail, order) {
     <body>
       <div class="container">
         <div class="header">
-          <h1>Order Confirmed! 🎉</h1>
+          <h1>Order Placed! 🎉</h1>
         </div>
         <div class="content">
           <p>Hi ${userName},</p>

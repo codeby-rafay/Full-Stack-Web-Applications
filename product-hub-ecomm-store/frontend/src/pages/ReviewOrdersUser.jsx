@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
-import { useShop } from "../context/ShopContext";
+import { useAuth } from "../redux/hooks";
 import { toast, Slide } from "react-toastify";
 import { DeleteOrderToast } from "../utils/toastUtils";
 import {
@@ -17,7 +17,7 @@ import axiosInstance from "../utils/axiosInstance";
 import DeleteConfirmationModal from "../components/ModalComponents/DeleteConfirmationModal";
 
 const ReviewOrdersUser = () => {
-  const { currentUser, authReady } = useShop();
+  const { currentUser, authReady } = useAuth();
   const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);

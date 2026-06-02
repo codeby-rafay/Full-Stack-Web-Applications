@@ -1,31 +1,48 @@
 import {
   createContext,
   useContext,
-  useState,
   useEffect,
   useCallback,
   useRef,
 } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { toast, Slide } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { setUser, clearUser, markAuthAsReady } from "../redux/slices/authSlice";
+import { loadCart, clearCart } from "../redux/slices/cartSlice";
+import {
+  loadSavedItems,
+  clearSavedItems,
+} from "../redux/slices/savedItemsSlice";
+import { setUnreadCount } from "../redux/slices/notificationSlice";
 import axiosInstance, {
   clearAccessToken,
   registerSessionExpiredHandler,
   setAccessToken,
 } from "../utils/axiosInstance";
 
-const ShopContext = createContext();
+const AuthContext = createContext();
 
-export const useShop = () => useContext(ShopContext);
+export const useAuthService = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuthService must be used within AuthProvider");
+  }
+  return context;
+};
 
-export function ShopProvider({ children }) {
+export function AuthProvider({ children }) {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [currentUser, setCurrentUser] = useState(() => {
-    const savedUser = localStorage.getItem("currentUser");
-    return savedUser ? JSON.parse(savedUser) : null;
-  });
-  const [authReady, setAuthReady] = useState(() => !currentUser);
+  // Get state from Redux
+  const currentUser = useSelector((state) => state.auth.currentUser);
+  const authReady = useSelector((state) => state.auth.authReady);
+  const cartItems = useSelector((state) => state.cart.items);
+  const savedItems = useSelector((state) => state.savedItems.items);
+  const unreadNotificationCount = useSelector(
+    (state) => state.notification.unreadCount,
+  );
 
   const getCartKey = (userId) => `cart_${userId}`;
   const getSavedItemsKey = (userId) => `savedItems_${userId}`;
@@ -45,12 +62,12 @@ export function ShopProvider({ children }) {
   const clearSessionState = useCallback(() => {
     localStorage.removeItem("currentUser");
     clearAccessToken();
-    setCurrentUser(null);
-    setCartItems([]);
-    setSavedItems([]);
-    setUnreadNotificationCount(0);
-    setAuthReady(true);
-  }, []);
+    dispatch(clearUser());
+    dispatch(clearCart());
+    dispatch(clearSavedItems());
+    dispatch(setUnreadCount(0));
+    dispatch(markAuthAsReady());
+  }, [dispatch]);
 
   const handleSessionExpired = useCallback(() => {
     clearSessionState();
@@ -73,7 +90,7 @@ export function ShopProvider({ children }) {
     bootstrappedSessionRef.current = true;
 
     if (!currentUser) {
-      setAuthReady(true);
+      dispatch(markAuthAsReady());
       return;
     }
 
@@ -84,22 +101,27 @@ export function ShopProvider({ children }) {
         console.error("Failed to restore session on app load:", error);
         handleSessionExpired();
       } finally {
-        setAuthReady(true);
+        dispatch(markAuthAsReady());
       }
     };
 
     restoreSession();
-  }, [currentUser, handleSessionExpired, hydrateAccessTokenFromCookie]);
+  }, [
+    currentUser,
+    handleSessionExpired,
+    hydrateAccessTokenFromCookie,
+    dispatch,
+  ]);
 
   const login = async (userData, token, options = {}) => {
     const { refreshFromCookie = !token } = options;
 
     localStorage.setItem("currentUser", JSON.stringify(userData));
-    setCurrentUser(userData);
+    dispatch(setUser(userData));
 
     if (token) {
       setAccessToken(token);
-      setAuthReady(true);
+      dispatch(markAuthAsReady());
     } else if (refreshFromCookie) {
       try {
         await hydrateAccessTokenFromCookie();
@@ -107,17 +129,17 @@ export function ShopProvider({ children }) {
         console.error("Failed to refresh access token after login:", error);
         handleSessionExpired();
       } finally {
-        setAuthReady(true);
+        dispatch(markAuthAsReady());
       }
     } else {
-      setAuthReady(true);
+      dispatch(markAuthAsReady());
     }
 
     const userCart = localStorage.getItem(getCartKey(userData.id));
     const userSavedItems = localStorage.getItem(getSavedItemsKey(userData.id));
 
-    setCartItems(userCart ? JSON.parse(userCart) : []);
-    setSavedItems(userSavedItems ? JSON.parse(userSavedItems) : []);
+    dispatch(loadCart(userCart ? JSON.parse(userCart) : []));
+    dispatch(loadSavedItems(userSavedItems ? JSON.parse(userSavedItems) : []));
   };
 
   const logout = async () => {
@@ -161,24 +183,27 @@ export function ShopProvider({ children }) {
     clearSessionState();
   };
 
-  const [cartItems, setCartItems] = useState(() => {
-    const savedUser = localStorage.getItem("currentUser");
-    if (!savedUser) return [];
-    const user = JSON.parse(savedUser);
-    const saved = localStorage.getItem(getCartKey(user.id));
-    return saved ? JSON.parse(saved) : [];
-  });
+  // Save cart to localStorage whenever it changes
+  useEffect(() => {
+    if (currentUser) {
+      localStorage.setItem(
+        getCartKey(currentUser.id),
+        JSON.stringify(cartItems),
+      );
+    }
+  }, [cartItems, currentUser]);
 
-  const [savedItems, setSavedItems] = useState(() => {
-    const savedUser = localStorage.getItem("currentUser");
-    if (!savedUser) return [];
-    const user = JSON.parse(savedUser);
-    const saved = localStorage.getItem(getSavedItemsKey(user.id));
-    return saved ? JSON.parse(saved) : [];
-  });
+  // Save saved items to localStorage whenever they change
+  useEffect(() => {
+    if (currentUser) {
+      localStorage.setItem(
+        getSavedItemsKey(currentUser.id),
+        JSON.stringify(savedItems),
+      );
+    }
+  }, [savedItems, currentUser]);
 
-  const [unreadNotificationCount, setUnreadNotificationCount] = useState(0);
-
+  // Fetch unread notifications count
   useEffect(() => {
     if (!authReady || !currentUser?.id || currentUser?.role !== "user") return;
 
@@ -188,7 +213,7 @@ export function ShopProvider({ children }) {
         const response = await axiosInstance.get(
           `/notifications/${currentUser.id}`,
         );
-        setUnreadNotificationCount(response.data.unreadCount || 0);
+        dispatch(setUnreadCount(response.data.unreadCount || 0));
       } catch (error) {
         if (error.response?.status !== 401) {
           throw error || new Error("Failed to fetch unread notifications");
@@ -205,108 +230,20 @@ export function ShopProvider({ children }) {
     currentUser?.id,
     currentUser?.role,
     hydrateAccessTokenFromCookie,
+    dispatch,
   ]);
 
-  useEffect(() => {
-    if (currentUser) {
-      localStorage.setItem(
-        getCartKey(currentUser.id),
-        JSON.stringify(cartItems),
-      );
-    }
-  }, [cartItems, currentUser]);
-
-  useEffect(() => {
-    if (currentUser) {
-      localStorage.setItem(
-        getSavedItemsKey(currentUser.id),
-        JSON.stringify(savedItems),
-      );
-    }
-  }, [savedItems, currentUser]);
-
-  const addToCart = (product) => {
-    setCartItems((prev) => {
-      const exists = prev.find((item) => item.id === product.id);
-      if (exists) return prev;
-      return [
-        ...prev,
-        { ...product, quantity: 1, originalStock: product.stock },
-      ];
-    });
-  };
-
-  const increaseQty = (productId) => {
-    setCartItems((prev) =>
-      prev.map((item) => {
-        if (item.id === productId && item.quantity < item.originalStock) {
-          return { ...item, quantity: item.quantity + 1 };
-        }
-        return item;
-      }),
-    );
-  };
-
-  const decreaseQty = (productId) => {
-    setCartItems((prev) => {
-      const item = prev.find((i) => i.id === productId);
-      if (!item) return prev;
-      if (item.quantity === 1) return prev.filter((i) => i.id !== productId);
-      return prev.map((i) =>
-        i.id === productId ? { ...i, quantity: i.quantity - 1 } : i,
-      );
-    });
-  };
-
-  const removeFromCart = (productId) => {
-    setCartItems((prev) => prev.filter((item) => item.id !== productId));
-  };
-
-  const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
-
-  const isInCart = (productId) =>
-    cartItems.some((item) => item.id === productId);
-
-  const getQtyInCart = (productId) => {
-    const item = cartItems.find((i) => i.id === productId);
-    return item ? item.quantity : 0;
-  };
-
-  const toggleSave = (product) => {
-    setSavedItems((prev) => {
-      const exists = prev.find((item) => item.id === product.id);
-      if (exists) return prev.filter((item) => item.id !== product.id);
-      return [...prev, product];
-    });
-  };
-
-  const isSaved = (productId) =>
-    savedItems.some((item) => item.id === productId);
+  // All state management is handled by Redux hooks
+  // This Context only provides business logic functions
 
   return (
-    <ShopContext.Provider
+    <AuthContext.Provider
       value={{
-        currentUser,
-        authReady,
         login,
         logout,
-        cartItems,
-        setCartItems,
-        addToCart,
-        increaseQty,
-        decreaseQty,
-        removeFromCart,
-        cartCount,
-        isInCart,
-        getQtyInCart,
-        savedItems,
-        toggleSave,
-        isSaved,
-        unreadNotificationCount,
-        setUnreadNotificationCount,
       }}
     >
       {children}
-    </ShopContext.Provider>
+    </AuthContext.Provider>
   );
 }

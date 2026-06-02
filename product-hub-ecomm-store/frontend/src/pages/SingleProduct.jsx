@@ -3,7 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { getSingleProduct } from "../api/products";
 import { Loading, ErrorMessage } from "../components/LoadingError";
 import { Star, ArrowLeft } from "lucide-react";
-import { useShop } from "../context/ShopContext";
+import { useCart } from "../redux/hooks";
 import AddtoCartBtn from "../components/SingleProductPageComponents/AddtoCartBtn";
 import CustomerReview from "../components/SingleProductPageComponents/CustomerReview";
 import SaveBtn from "../components/SingleProductPageComponents/SaveBtn";
@@ -16,7 +16,7 @@ function SingleProduct() {
   const [selectedImage, setSelectedImage] = useState(0);
 
   // Get how many of this product are already in the cart
-  const { getQtyInCart } = useShop();
+  const { getQtyInCart } = useCart();
 
   useEffect(() => {
     window.scrollTo(0, 0);

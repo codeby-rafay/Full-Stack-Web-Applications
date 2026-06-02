@@ -1,8 +1,8 @@
-import { useShop } from "../../context/ShopContext";
+import { useSavedItems } from "../../redux/hooks";
 import { saveToast, unsaveToast } from "../../utils/toastUtils";
 
 const SaveBtn = ({ product }) => {
-  const { toggleSave, isSaved } = useShop();
+  const { toggleSave, isSaved } = useSavedItems();
 
   const saved = isSaved(product?.id);
 

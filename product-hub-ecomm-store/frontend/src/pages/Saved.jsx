@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
-import { useShop } from "../context/ShopContext";
+import { useSavedItems } from "../redux/hooks";
 import { Heart } from "lucide-react";
 import { unsaveToast } from "../utils/toastUtils";
 
 function Saved() {
-  const { savedItems, toggleSave } = useShop();
+  const { savedItems, toggleSave } = useSavedItems();
 
   window.scrollTo({ top: 0, behavior: "smooth" });
 
@@ -46,7 +46,7 @@ function Saved() {
           {savedItems.map((product) => (
             <div
               key={product.id}
-              className="bg-white rounded-2xl overflow-hidden border border-gray-100 hover:shadow-lg transition-shadow"
+              className="bg-white rounded-2xl overflow-hidden border hover:-translate-y-3 group border-gray-100 hover:shadow-lg transition-all duration-300"
             >
               {/* Image of product */}
               <Link to={`/products/${product.id}`}>

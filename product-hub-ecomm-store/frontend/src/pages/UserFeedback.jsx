@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { toast, Slide } from "react-toastify";
 import { MessageCircle, Trash2, Reply, X, Send, Mail } from "lucide-react";
-import { useShop } from "../context/ShopContext";
+import { useAuth } from "../redux/hooks";
 import axiosInstance from "../utils/axiosInstance";
 import DeleteConfirmationModal from "../components/ModalComponents/DeleteConfirmationModal";
 import UserSearchBar from "../components/SearchbarComponents/UserSearchBar";
@@ -21,8 +21,8 @@ function UserFeedback() {
     replied: 0,
   });
   const [searchQuery, setSearchQuery] = useState("");
-  const { currentUser, authReady } = useShop();
-
+  const { currentUser, authReady } = useAuth();
+  
   // Fetch all feedback
   useEffect(() => {
     if (!authReady || !currentUser?.id || currentUser?.role !== "admin") {

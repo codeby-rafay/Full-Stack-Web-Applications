@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useShop } from "../context/ShopContext";
+import { useAuth } from "../redux/hooks";
 
 const ProtectedAdminRoute = ({ children }) => {
-  const { currentUser } = useShop();
+  const { currentUser } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {

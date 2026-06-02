@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ShoppingCart } from "lucide-react";
 import { toast, Slide } from "react-toastify";
-import { useShop } from "../context/ShopContext";
+import { useCart, useAuth } from "../redux/hooks";
 import CheckoutBtn from "./CartPanelComponents/CheckoutBtn";
 import CartItems from "./CartPanelComponents/CartItems";
 import CartHeader from "./CartPanelComponents/CartHeader";
@@ -20,10 +20,9 @@ function CartDisplay() {
     removeFromCart,
     increaseQty,
     decreaseQty,
-    currentUser,
-    authReady,
-    setCartItems,
-  } = useShop();
+    clearCart,
+  } = useCart();
+  const { currentUser, authReady } = useAuth();
 
   const handleClose = () => {
     setIsClosing(true);
@@ -127,7 +126,7 @@ function CartDisplay() {
         });
 
         // Clear cart items
-        setCartItems([]);
+        clearCart();
         localStorage.removeItem(`cart_${currentUser.id}`);
 
         // Close cart drawer

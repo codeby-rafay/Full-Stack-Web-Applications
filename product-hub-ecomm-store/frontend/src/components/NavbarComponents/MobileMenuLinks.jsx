@@ -1,11 +1,14 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Heart, LogOut, Bell, Cuboid, UserPen } from "lucide-react";
-import { useShop } from "../../context/ShopContext";
+import { useAuth, useSavedItems, useNotification } from "../../redux/hooks";
+import { useAuthService } from "../../context/AuthServiceContext";
 import { LogoutToast } from "../../utils/toastUtils";
 
 const MobileMenuLinks = ({ navLinks, isActive, menuOpen, setMenuOpen }) => {
-  const { currentUser, logout, savedItems, unreadNotificationCount } =
-    useShop();
+  const { logout } = useAuthService();
+  const { currentUser } = useAuth();
+  const { savedItems } = useSavedItems();
+  const { unreadCount: unreadNotificationCount } = useNotification();
   const navigate = useNavigate();
 
   const hasSaved = savedItems.length > 0;

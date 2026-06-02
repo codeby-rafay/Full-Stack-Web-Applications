@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
-import { useShop } from "../context/ShopContext";
+import { useSavedItems, useNotification } from "../redux/hooks";
 import { Link } from "react-router-dom";
 import DesktopNavLinks from "./NavbarComponents/DesktopNavLinks";
 import MobileMenuLinks from "./NavbarComponents/MobileMenuLinks";
@@ -9,7 +9,8 @@ import MobileMenuBtn from "./NavbarComponents/MobileMenuBtn";
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
-  const { savedItems, unreadNotificationCount } = useShop();
+  const { savedItems } = useSavedItems();
+  const { unreadCount: unreadNotificationCount } = useNotification();
 
   // Note: "Saved" is no longer here - it moved to the user dropdown
   const navLinks = [
