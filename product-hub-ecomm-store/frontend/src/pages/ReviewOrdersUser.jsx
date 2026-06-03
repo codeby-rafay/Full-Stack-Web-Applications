@@ -2,6 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import { useAuth } from "../redux/hooks";
 import { toast, Slide } from "react-toastify";
 import { DeleteOrderToast } from "../utils/toastUtils";
+import { ReviewOrdersSkeletonLoader } from "../components/SkeletonLoader";
 import {
   Package,
   Calendar,
@@ -153,17 +154,7 @@ const ReviewOrdersUser = () => {
   }
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-linear-to-br from-orange-50 to-amber-50 flex items-center justify-center p-4">
-        <div className="text-center">
-          <Loader
-            size={48}
-            className="animate-spin text-orange-500 mx-auto mb-4"
-          />
-          <p className="text-gray-600 font-medium">Loading your orders...</p>
-        </div>
-      </div>
-    );
+    return <ReviewOrdersSkeletonLoader />;
   }
 
   return (

@@ -4,6 +4,7 @@ import { getSingleProduct } from "../api/products";
 import { Loading, ErrorMessage } from "../components/LoadingError";
 import { Star, ArrowLeft } from "lucide-react";
 import { useCart } from "../redux/hooks";
+import { SingleProductSkeletonLoader } from "../components/SkeletonLoader";
 import AddtoCartBtn from "../components/SingleProductPageComponents/AddtoCartBtn";
 import CustomerReview from "../components/SingleProductPageComponents/CustomerReview";
 import SaveBtn from "../components/SingleProductPageComponents/SaveBtn";
@@ -48,12 +49,7 @@ function SingleProduct() {
     ));
   };
 
-  if (loading)
-    return (
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <Loading />
-      </div>
-    );
+  if (loading) return <SingleProductSkeletonLoader />;
   if (error)
     return (
       <div className="max-w-7xl mx-auto px-4 py-8">

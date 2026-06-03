@@ -3,6 +3,7 @@ import { Users, UserPlus, Trash2 } from "lucide-react";
 import { toast, Slide } from "react-toastify";
 import { DeleteRecordToast } from "../utils/toastUtils";
 import { useAuth } from "../redux/hooks";
+import { AdminPageSkeletonLoader } from "../components/SkeletonLoader";
 import axiosInstance from "../utils/axiosInstance";
 import DeleteConfirmationModal from "../components/ModalComponents/DeleteConfirmationModal";
 import UserSearchBar from "../components/SearchbarComponents/UserSearchBar";
@@ -110,6 +111,15 @@ function AdminPage() {
     setRecordToDelete(null);
   };
 
+  if (loadingUser) return <AdminPageSkeletonLoader />;
+
+  if (errorUser)
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p className="text-red-500">Error: {errorUser}</p>
+      </div>
+    );
+
   return (
     <div className="w-full bg-linear-to-br from-orange-50 to-amber-50 py-8 px-4">
       <div className="max-w-7xl mx-auto">
@@ -174,9 +184,7 @@ function AdminPage() {
           {userData && (
             <div className="overflow-x-auto">
               {loadingUser ? (
-                <div className="text-center py-12">
-                  <p className="text-gray-500">Loading user records...</p>
-                </div>
+                <AdminPageSkeletonLoader />
               ) : errorUser ? (
                 <div className="text-center py-12">
                   <p className="text-red-500">Error: {errorUser}</p>

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { getAllProducts } from "../api/products";
 import { Loading, ErrorMessage } from "../components/LoadingError";
 import { Sparkle } from "lucide-react";
+import { HomeSkeletonLoader } from "../components/SkeletonLoader";
 import ProductCard from "../components/ProductCard";
 import BrowseAllProductBtn from "../components/HomePageComponents/BrowseAllProductBtn";
 import ShopbyCategoryBtn from "../components/HomePageComponents/ShopbyCategoryBtn";
@@ -97,7 +98,7 @@ function Home() {
           <ViewAllLink />
         </div>
 
-        {loading && <Loading />}
+        {loading && <HomeSkeletonLoader />}
         {error && <ErrorMessage message={error} />}
 
         {!loading && !error && (

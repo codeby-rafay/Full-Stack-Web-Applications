@@ -1,9 +1,14 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useSavedItems } from "../redux/hooks";
 import { Heart } from "lucide-react";
 import { unsaveToast } from "../utils/toastUtils";
+import { Loading, ErrorMessage } from "../components/LoadingError";
+import { SavedSkeletonLoader } from "../components/SkeletonLoader";
 
 function Saved() {
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const { savedItems, toggleSave } = useSavedItems();
 
   window.scrollTo({ top: 0, behavior: "smooth" });
@@ -21,8 +26,11 @@ function Saved() {
         {savedItems.length} item{savedItems.length !== 1 ? "s" : ""} saved
       </p>
 
+      {loading && <SavedSkeletonLoader />}
+      {error && <ErrorMessage message={error} />}
+
       {/* If page is empty the this code works */}
-      {savedItems.length === 0 && (
+      {!loading && !error && savedItems.length === 0 && (
         <div className="flex flex-col items-center justify-center py-24 gap-4">
           <Heart size={56} className="text-gray-200" />
           <p className="text-gray-400 text-lg font-medium">
@@ -41,7 +49,7 @@ function Saved() {
       )}
 
       {/* Saved Items Grid */}
-      {savedItems.length > 0 && (
+      {!loading && !error && savedItems.length > 0 && (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {savedItems.map((product) => (
             <div

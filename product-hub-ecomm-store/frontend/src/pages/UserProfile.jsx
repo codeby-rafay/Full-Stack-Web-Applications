@@ -6,6 +6,7 @@ import { User, Mail, Phone, Trash2, Save, AlertTriangle } from "lucide-react";
 import { useAuthService } from "../context/AuthServiceContext";
 import { useAuth } from "../redux/hooks";
 import { toast, Slide } from "react-toastify";
+import { UserProfileSkeletonLoader } from "../components/SkeletonLoader";
 import axiosInstance from "../utils/axiosInstance";
 
 // Zod Schema
@@ -40,7 +41,7 @@ const validate = (values) => {
 
 function UserProfile() {
   const { logout, login } = useAuthService();
-    const { currentUser, authReady } = useAuth();
+  const { currentUser, authReady } = useAuth();
   const navigate = useNavigate();
 
   const [profileData, setProfileData] = useState(null);
@@ -176,7 +177,18 @@ function UserProfile() {
     }
   };
 
-  if (!authReady || !currentUser) return null;
+  if (!authReady || !currentUser) {
+    return (
+      <div className="min-h-screen bg-linear-to-br from-orange-50 to-amber-50 flex items-center justify-center p-4">
+        <div className="text-center">
+          <AlertCircle size={48} className="text-orange-500 mx-auto mb-4" />
+          <p className="text-gray-600 font-medium">Problem Loading Profile.</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (loading) return <UserProfileSkeletonLoader />;
 
   return (
     <div className="min-h-screen bg-linear-to-br from-orange-50 to-amber-50 py-10 px-4">
@@ -215,14 +227,7 @@ function UserProfile() {
           <div className="px-6 py-6">
             {loading ? (
               // Skeleton loader while fetching profile
-              <div className="space-y-4">
-                {[1, 2, 3].map((i) => (
-                  <div
-                    key={i}
-                    className="h-12 bg-gray-100 rounded-lg animate-pulse"
-                  />
-                ))}
-              </div>
+              <UserProfileSkeletonLoader />
             ) : (
               <Formik
                 initialValues={{

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { toast, Slide } from "react-toastify";
 import { MessageCircle, Trash2, Reply, X, Send, Mail } from "lucide-react";
 import { useAuth } from "../redux/hooks";
+import { UserFeedbackSkeletonLoader } from "../components/SkeletonLoader";
 import axiosInstance from "../utils/axiosInstance";
 import DeleteConfirmationModal from "../components/ModalComponents/DeleteConfirmationModal";
 import UserSearchBar from "../components/SearchbarComponents/UserSearchBar";
@@ -22,7 +23,7 @@ function UserFeedback() {
   });
   const [searchQuery, setSearchQuery] = useState("");
   const { currentUser, authReady } = useAuth();
-  
+
   // Fetch all feedback
   useEffect(() => {
     if (!authReady || !currentUser?.id || currentUser?.role !== "admin") {
@@ -198,13 +199,7 @@ function UserFeedback() {
   };
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin">
-          <MessageCircle size={48} className="text-orange-500" />
-        </div>
-      </div>
-    );
+    return <UserFeedbackSkeletonLoader />;
   }
 
   if (!authReady || !currentUser?.id || currentUser?.role !== "admin") {

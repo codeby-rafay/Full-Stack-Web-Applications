@@ -1,5 +1,6 @@
 import { useEffect, useState, useMemo } from "react";
 import { DeleteOrderToast, FailedToLoadOrdersToast } from "../utils/toastUtils";
+import { ManageOrdersSkeletonLoader } from "../components/SkeletonLoader";
 import {
   Package,
   User,
@@ -227,17 +228,7 @@ const ManageOrdersAdmin = () => {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-linear-to-br from-orange-50 to-amber-50 flex items-center justify-center p-4">
-        <div className="text-center">
-          <Loader
-            size={48}
-            className="animate-spin text-orange-500 mx-auto mb-4"
-          />
-          <p className="text-gray-600 font-medium">Loading orders...</p>
-        </div>
-      </div>
-    );
+    return <ManageOrdersSkeletonLoader />;
   }
 
   if (!authReady || !currentUser?.id || currentUser?.role !== "admin") {

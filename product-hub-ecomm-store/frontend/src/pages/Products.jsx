@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getAllProducts, searchProducts } from "../api/products";
 import { Loading, ErrorMessage, NoResults } from "../components/LoadingError";
+import { ProductsSkeletonLoader } from "../components/SkeletonLoader";
 import SearchBar from "../components/SearchbarComponents/SearchBar";
 import ProductCard from "../components/ProductCard";
 import Pagination from "../components/ProductsPageComponents/Pagination";
@@ -76,7 +77,7 @@ function Products() {
       </div>
 
       {/* Content */}
-      {loading && <Loading />}
+      {loading && <ProductsSkeletonLoader />}
       {error && <ErrorMessage message={error} />}
       {!loading && !error && products.length === 0 && <NoResults />}
 

@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { getProductsByCategory } from "../api/products";
 import { Loading, ErrorMessage } from "../components/LoadingError";
 import { ArrowLeft } from "lucide-react";
+import { CategoryProductsSkeletonLoader } from "../components/SkeletonLoader";
 import ProductCard from "../components/ProductCard";
 
 function CategoryProducts() {
@@ -64,7 +65,7 @@ function CategoryProducts() {
         </p>
       </div>
 
-      {loading && <Loading />}
+      {loading && <CategoryProductsSkeletonLoader />}
       {error && <ErrorMessage message={error} />}
 
       {!loading && !error && products.length === 0 && (
@@ -87,7 +88,8 @@ function CategoryProducts() {
           to="/categories"
           className="inline-flex items-center gap-2 text-orange-500 hover:text-orange-700 hover:underline font-bold text-lg hover:-translate-x-2 transition-all"
         >
-          <ArrowLeft size={24} strokeWidth={2} /> <span>Back to Categories</span>
+          <ArrowLeft size={24} strokeWidth={2} />{" "}
+          <span>Back to Categories</span>
         </Link>
       </div>
     </div>

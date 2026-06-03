@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getCategoryList } from "../api/products";
 import { Loading, ErrorMessage } from "../components/LoadingError";
+import { CategoriesSkeletonLoader } from "../components/SkeletonLoader";
 import {
   ShoppingCart,
   Armchair,
@@ -52,7 +53,7 @@ function Categories() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  window.scrollTo(0, 0);
+  window.scrollTo({ top: 0, behavior: "smooth" });
 
   useEffect(() => {
     // Fetch category list when component loads
@@ -94,7 +95,7 @@ function Categories() {
         </p>
       </div>
 
-      {loading && <Loading />}
+      {loading && <CategoriesSkeletonLoader />}
       {error && <ErrorMessage message={error} />}
 
      {!loading && !error && (

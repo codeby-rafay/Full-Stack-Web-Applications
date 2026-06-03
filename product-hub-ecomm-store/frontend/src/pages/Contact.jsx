@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { z } from "zod";
 import { toast, Slide } from "react-toastify";
+import { ContactSkeletonLoader } from "../components/SkeletonLoader";
 import axiosInstance from "../utils/axiosInstance";
 
 // Zod Schema
@@ -16,6 +17,7 @@ const contactSchema = z.object({
 
 function Contact() {
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   window.scrollTo({ top: 0, behavior: "smooth" });
 
@@ -85,6 +87,8 @@ function Contact() {
     }
   };
 
+  if (loading) return <ContactSkeletonLoader />;
+
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       {/* Header */}
@@ -125,7 +129,7 @@ function Contact() {
           </button>
         </div>
       ) : (
-        <div className="bg-white border border-gray-100 rounded-2xl p-8 shadow-sm">
+        <div className="bg-white shadow-xl rounded-2xl p-8 border-t-4 border-orange-500">
           <Formik
             initialValues={{
               name: "",
@@ -265,7 +269,7 @@ function Contact() {
         ].map((item) => (
           <div
             key={item.label}
-            className="bg-white border border-gray-100 rounded-xl p-4 text-center"
+            className="bg-white border border-gray-100 rounded-xl p-4 text-center shadow-xl"
           >
             <div className="text-2xl mb-1 flex justify-center">{item.icon}</div>
 
