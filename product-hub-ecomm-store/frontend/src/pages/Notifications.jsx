@@ -9,7 +9,7 @@ const Notifications = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteAction, setDeleteAction] = useState(null); // 'clearAll' or null
   const [loading, setLoading] = useState(true);
-  const { currentUser: user, authReady } = useAuth();
+  const { currentUser, authReady } = useAuth();
   const {
     unreadCount: unreadNotificationCount,
     setUnreadCount: setUnreadNotificationCount,
@@ -18,14 +18,16 @@ const Notifications = () => {
   // Fetch notifications from backend
   const fetchNotifications = async () => {
     try {
-      if (!user?.id) {
+      if (!currentUser?.id) {
         setLoading(false);
         return;
       }
 
       setLoading(true);
 
-      const response = await axiosInstance.get(`/notifications/${user.id}`);
+      const response = await axiosInstance.get(
+        `/notifications/${currentUser.id}`,
+      );
 
       setNotifications(response.data.notifications || []);
       const count = response.data.unreadCount || 0;
@@ -94,7 +96,7 @@ const Notifications = () => {
   // Mark all notifications as read
   const markAllAsRead = async () => {
     try {
-      await axiosInstance.put(`/notifications/${user.id}/read-all`);
+      await axiosInstance.put(`/notifications/${currentUser.id}/read-all`);
       // fetchNotifications(); // Refresh notifications (can be done through this way also but we are doing optimistic ui update to avoid extra loading time)
       setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
       setUnreadNotificationCount(0);
@@ -129,8 +131,13 @@ const Notifications = () => {
   const deleteNotification = async (notificationId) => {
     try {
       await axiosInstance.delete(`/notifications/${notificationId}`);
+      const deletedNotification = notifications.find(
+        (n) => n._id === notificationId,
+      );
+      if (deletedNotification && !deletedNotification.isRead) {
+        setUnreadNotificationCount(Math.max(0, unreadNotificationCount - 1));
+      }
       setNotifications((prev) => prev.filter((n) => n._id !== notificationId));
-      setUnreadNotificationCount((prev) => Math.max(0, prev - 1));
       toast.success("Notification deleted!", {
         position: "top-right",
         autoClose: 5000,
@@ -161,7 +168,7 @@ const Notifications = () => {
   // Clear all notifications
   const clearAllNotifications = async () => {
     try {
-      await axiosInstance.delete(`/notifications/${user.id}/clear-all`);
+      await axiosInstance.delete(`/notifications/${currentUser.id}/clear-all`);
       setNotifications([]);
       setUnreadNotificationCount(0);
       toast.success("All notifications cleared!", {
@@ -206,10 +213,10 @@ const Notifications = () => {
 
   // Fetch notifications on component mount
   useEffect(() => {
-    if (!authReady || !user?.id) return;
+    if (!authReady || !currentUser?.id) return;
 
     fetchNotifications();
-  }, [authReady, user?.id]);
+  }, [authReady, currentUser?.id]);
 
   const getNotificationStyle = (type) => {
     const styles = {
