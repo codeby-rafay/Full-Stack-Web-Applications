@@ -15,7 +15,6 @@ const ProductCardSkeleton = () => (
   </div>
 );
 
-/** 4-column product grid skeleton */
 const ProductGridSkeleton = ({ count = 8 }) => (
   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
     {[...Array(count)].map((_, i) => (
@@ -704,7 +703,7 @@ export const ContactSkeletonLoader = () => (
   </div>
 );
 
-// LEGACY — kept for backward compatibility
+// kept for backward compatibility
 export const SkeletonLoader = () => (
   <div className="min-h-screen w-full bg-white p-6">
     <div className="mb-8 space-y-4">
