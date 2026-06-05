@@ -135,6 +135,7 @@ function CartDisplay() {
         }, 500);
       }
     } catch (error) {
+      console.error("Error occurred during checkout:", error);
       toast.error(
         error.response?.data?.message ||
           error.message ||

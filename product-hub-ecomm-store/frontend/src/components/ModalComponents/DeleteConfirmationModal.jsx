@@ -23,6 +23,7 @@ const DeleteConfirmationModal = ({
         await result;
       }
     } catch (err) {
+      console.error("Error occurred while confirming the action:", err);
       throw err || new Error("An error occurred while confirming the action.");
     } finally {
       setConfirmDisabled(false);
