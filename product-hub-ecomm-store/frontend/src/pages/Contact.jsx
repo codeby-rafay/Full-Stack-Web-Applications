@@ -75,6 +75,7 @@ function Contact() {
       setSubmitted(true);
       resetForm();
     } catch (error) {
+      console.error("Error submitting contact form:", error);
       toast.error(error.response?.data?.message || "Failed to send message", {
         position: "top-right",
         autoClose: 5000,

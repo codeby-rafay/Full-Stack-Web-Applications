@@ -62,6 +62,7 @@ const ResetPassword = () => {
         transition: Slide,
       });
     } catch (error) {
+      console.error("Error sending OTP:", error);
       const errorMsg =
         error.response?.data?.message ||
         "Failed to send OTP. Please try again.";
@@ -128,6 +129,7 @@ const ResetPassword = () => {
         transition: Slide,
       });
     } catch (error) {
+      console.error("Error verifying OTP:", error);
       const errorMsg =
         error.response?.data?.message || "Invalid OTP. Please try again.";
       toast.error(errorMsg, {
@@ -187,6 +189,7 @@ const ResetPassword = () => {
       });
       setTimeout(() => navigate("/login"), 1000);
     } catch (error) {
+      console.error("Error resetting password:", error);
       const errorMsg =
         error.response?.data?.message ||
         "Failed to reset password. Please try again.";

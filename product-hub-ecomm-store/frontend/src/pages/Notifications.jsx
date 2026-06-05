@@ -34,6 +34,7 @@ const Notifications = () => {
       const count = response.data.unreadCount || 0;
       setUnreadNotificationCount(count);
     } catch (error) {
+      console.error("Error fetching notifications:", error);
       toast.error(
         error.response?.data?.message ||
           error.message ||
@@ -77,6 +78,7 @@ const Notifications = () => {
         transition: Slide,
       });
     } catch (error) {
+      console.error("Error marking notification as read:", error);
       toast.error(
         error.response?.data?.message ||
           error.message ||
@@ -111,6 +113,7 @@ const Notifications = () => {
         transition: Slide,
       });
     } catch (error) {
+      console.error("Error marking all notifications as read:", error);
       toast.error(
         error.response?.data?.message ||
           error.message ||
@@ -149,6 +152,7 @@ const Notifications = () => {
         transition: Slide,
       });
     } catch (error) {
+      console.error("Error deleting notification:", error);
       toast.error(
         error.response?.data?.message ||
           error.message ||
@@ -182,6 +186,7 @@ const Notifications = () => {
         transition: Slide,
       });
     } catch (error) {
+      console.error("Error clearing notifications:", error);
       toast.error(
         error.response?.data?.message ||
           error.message ||

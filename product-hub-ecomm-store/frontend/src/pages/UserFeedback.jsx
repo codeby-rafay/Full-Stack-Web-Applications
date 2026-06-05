@@ -65,7 +65,6 @@ function UserFeedback() {
       setFeedbacks(feedbacks.filter((f) => f._id !== feedbackToDelete));
       setShowDeleteModal(false);
       setFeedbackToDelete(null);
-
       toast.success("Feedback deleted successfully", {
         position: "top-right",
         autoClose: 5000,
@@ -76,6 +75,7 @@ function UserFeedback() {
         transition: Slide,
       });
     } catch (error) {
+      console.error("Error deleting feedback:", error);
       toast.error("Failed to delete feedback", {
         position: "top-right",
         autoClose: 5000,
@@ -117,6 +117,7 @@ function UserFeedback() {
         transition: Slide,
       });
     } catch (error) {
+      console.error("Error marking feedback as read:", error);
       // If error, fetch fresh data to revert optimistic update
       fetchFeedback();
       toast.error("Failed to mark as read", {
@@ -150,7 +151,6 @@ function UserFeedback() {
       await axiosInstance.put(`/feedback/${selectedFeedback._id}/reply`, {
         reply: replyText,
       });
-
       toast.success("Reply sent successfully!", {
         position: "top-right",
         autoClose: 5000,
@@ -167,6 +167,7 @@ function UserFeedback() {
       setReplyText("");
       setSelectedFeedback(null);
     } catch (error) {
+      console.error("Error sending reply:", error);
       toast.error("Failed to send reply", {
         position: "top-right",
         autoClose: 5000,

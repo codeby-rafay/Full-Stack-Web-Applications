@@ -30,6 +30,7 @@ function SingleProduct() {
         setProduct(data);
         setSelectedImage(0);
       } catch (err) {
+        console.error("Error fetching product:", err);
         setError(err.message);
       } finally {
         setLoading(false);

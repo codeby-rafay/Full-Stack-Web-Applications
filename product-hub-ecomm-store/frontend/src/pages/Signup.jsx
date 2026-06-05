@@ -43,7 +43,6 @@ function Signup() {
 
         // Save user info and hydrate access token from the refresh cookie
         await login(data.user);
-
         Welcometoast(data.user);
 
         // Navigate to home
@@ -52,6 +51,7 @@ function Signup() {
           navigate("/");
         }, 100);
       } catch (error) {
+        console.error("Error occurred during Google login:", error);
         toast.error(
           error.response?.data?.message ||
             error.response?.data?.errors?.[0]?.msg ||
@@ -171,6 +171,7 @@ function Signup() {
         navigate("/login");
       }, 1000);
     } catch (error) {
+      console.error("Error occurred during signup:", error);
       toast.error(
         error.response?.data?.message ||
           error.response?.data?.errors?.[0]?.msg ||

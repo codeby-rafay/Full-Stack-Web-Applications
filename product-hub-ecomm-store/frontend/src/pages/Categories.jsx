@@ -64,6 +64,7 @@ function Categories() {
         const data = await getCategoryList();
         setCategories(data);
       } catch (err) {
+        console.error("Error fetching categories:", err);
         setError(err.message);
       } finally {
         setLoading(false);

@@ -37,6 +37,7 @@ const ReviewOrdersUser = () => {
         );
         setOrders(response.data.orders || []);
       } catch (error) {
+        console.error("Error fetching orders:", error);
         toast.error(error.response?.data?.message || "Failed to load orders", {
           position: "top-right",
           autoClose: 5000,
@@ -103,6 +104,7 @@ const ReviewOrdersUser = () => {
       setOrderToDelete(null);
       setActionType(null);
     } catch (error) {
+      console.error("Error performing action:", error);
       toast.error(error.response?.data?.message || "Failed to perform action", {
         position: "top-right",
         autoClose: 5000,

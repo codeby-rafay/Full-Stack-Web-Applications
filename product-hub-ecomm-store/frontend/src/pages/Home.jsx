@@ -25,6 +25,7 @@ function Home() {
         const data = await getAllProducts(20, 0); // get 20 products
         setProducts(data.products);
       } catch (err) {
+        console.error("Error fetching products:", err);
         setError(err.message);
       } finally {
         setLoading(false);

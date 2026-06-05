@@ -56,6 +56,7 @@ const ManageOrdersAdmin = () => {
         setOrders(response.data.orders);
       }
     } catch (error) {
+      console.error("Error fetching orders:", error);
       FailedToLoadOrdersToast();
     } finally {
       setLoading(false);
@@ -83,6 +84,7 @@ const ManageOrdersAdmin = () => {
         });
       }
     } catch (error) {
+      console.error("Error updating order status:", error);
       toast.error("Failed to update order status", {
         position: "top-right",
         autoClose: 3000,
@@ -121,6 +123,7 @@ const ManageOrdersAdmin = () => {
         });
       }
     } catch (error) {
+      console.error("Error marking payment as returned:", error);
       toast.error("Failed to mark payment as returned", {
         position: "top-right",
         autoClose: 3000,
@@ -144,6 +147,7 @@ const ManageOrdersAdmin = () => {
       setOrderToDelete(null);
       DeleteOrderToast();
     } catch (error) {
+      console.error("Error deleting order:", error);
       toast.error("Failed to delete order", {
         position: "top-right",
         autoClose: 3000,

@@ -33,6 +33,7 @@ function Products() {
       setProducts(data.products);
       setTotalProducts(data.total);
     } catch (err) {
+      console.error("Error fetching products:", err);
       setError(err.message);
     } finally {
       setLoading(false);

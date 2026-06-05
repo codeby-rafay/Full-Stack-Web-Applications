@@ -34,12 +34,12 @@ function Login() {
 
         // Save user info and set the access token immediately
         await login(data.user, data.accessToken);
-
         Welcometoast(data.user);
 
         window.scrollTo({ top: 0, behavior: "auto" });
         navigate("/");
       } catch (error) {
+        console.error("Error during Google login:", error);
         toast.error(
           error.response?.data?.message ||
             error.response?.data?.errors?.[0]?.msg ||
@@ -99,7 +99,6 @@ function Login() {
       // login successful
       // Save user info and set the access token immediately
       await login(data.user, data.accessToken);
-
       Welcometoast(data.user);
 
       setFormData({ email: "", password: "" });
@@ -111,6 +110,7 @@ function Login() {
         navigate("/");
       }
     } catch (error) {
+      console.error("Login error:", error);
       toast.error(
         error.response?.data?.message ||
           error.response?.data?.errors?.[0]?.msg ||
