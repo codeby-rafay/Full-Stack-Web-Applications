@@ -20,6 +20,7 @@ const authAdmin = async (req, res, next) => {
 
     next();
   } catch (error) {
+    console.error("Error occurred while verifying admin token:", error);
     res.status(401).json({ message: "Token expired or invalid" });
   }
 };
@@ -39,6 +40,7 @@ const authUser = async (req, res, next) => {
 
     next();
   } catch (error) {
+    console.error("Error occurred while verifying user token:", error);
     res.status(401).json({ message: "Token expired or invalid" });
   }
 };
@@ -53,6 +55,7 @@ const authAny = async (req, res, next) => {
     req.user = decoded;
     next();
   } catch (error) {
+    console.error("Error occurred while verifying token:", error);
     res.status(401).json({ message: "Token expired or invalid" });
   }
 };
