@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Mail, ArrowLeft, Loader, Check } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast, Slide } from "react-toastify";
@@ -21,7 +21,9 @@ const ResetPassword = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
 
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
 
   // Step 1: Send OTP
   const handleSendOTP = async (e) => {

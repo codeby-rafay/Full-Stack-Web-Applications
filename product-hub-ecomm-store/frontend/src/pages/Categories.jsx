@@ -39,12 +39,12 @@ const categoryIcons = {
   "sports-accessories": ( <img className="size-10" src="https://www.svgrepo.com/show/446025/sports-soccer.svg" alt="Sports Accessories" />),
   "sunglasses": ( <img className="size-10" src="https://www.svgrepo.com/show/488212/glasses.svg" alt="Sunglasses" /> ),
   "tablets": <Tablet size={38} strokeWidth={1.75} />,
-  "tops": ( <img className="size-10" src="https://www.svgrepo.com/show/482584/dress-4.svg" alt="Tops" /> ),
+  "tops": ( <img className="size-10" src="https://www.svgrepo.com/show/290773/sleeveless-sleeveless.svg" alt="Tops" /> ),
   "vehicle": ( <img className="size-10" src="https://www.svgrepo.com/show/490616/car-hatchback.svg" alt="Vehicle" /> ),
   "womens-bags": <Handbag size={38} strokeWidth={1.75} />,
   "womens-dresses": ( <svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" viewBox="0 0 24 24" fill="#000000" alt="Womens Dresses"><g fill="none" stroke="#000000" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" color="currentColor"><path d="m15 4l-3 2l-3-2c-.586.51-1.93 1.293-1.997 2.146c-.029.37.126.571.435.975C8.112 8.002 9 8.521 9 10h6c0-1.48.888-1.998 1.562-2.879c.31-.404.464-.606.434-.975C16.93 5.293 15.587 4.509 15 4M9 4V2m6 2V2m-5.5 8h5m3.5 9c2 0 3-2.173 3-2.173c-2.825-1.836-4.5-3.993-5.413-5.622c-.347-.62-.521-.93-.755-1.068C14.598 10 14.285 10 13.659 10H10.34c-.626 0-.939 0-1.173.137s-.408.447-.755 1.068C7.5 12.834 5.825 14.99 3 16.827C3 16.827 4 19 6 19"/><path d="M13.706 14c.34.796 1.815 2.671 3.435 4.31c.597.605.896.907.855 1.42c-.04.512-.29.683-.79 1.025C16.07 21.53 14.336 22 12 22s-4.07-.469-5.207-1.245c-.5-.342-.75-.513-.79-1.025c-.04-.513.259-.815.856-1.42c1.62-1.639 3.096-3.514 3.435-4.31"/></g></svg> ),
   "womens-jewellery": <Gem size={38} strokeWidth={1.75} />,
-  "womens-shoes": ( <img className="size-10" src="https://www.svgrepo.com/show/482644/glass-shoe.svg" alt="Womens Shoes" /> ) ,
+  "womens-shoes": ( <img className="size-10" src="https://www.svgrepo.com/show/336526/high-heeled-shoes.svg" alt="Womens Shoes" /> ) ,
   "womens-watches": <Watch size={38} strokeWidth={1.75} />,
 };
 
@@ -53,7 +53,9 @@ function Categories() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
 
   useEffect(() => {
     // Fetch category list when component loads

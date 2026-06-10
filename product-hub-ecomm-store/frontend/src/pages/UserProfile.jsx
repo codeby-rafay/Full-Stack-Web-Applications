@@ -50,6 +50,10 @@ function UserProfile() {
   const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
+  useEffect(() => {
     if (!authReady) {
       return;
     }

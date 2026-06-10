@@ -16,6 +16,10 @@ const Notifications = () => {
     setUnreadCount: setUnreadNotificationCount,
   } = useNotification();
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
   // Fetch notifications from backend
   const fetchNotifications = async () => {
     try {

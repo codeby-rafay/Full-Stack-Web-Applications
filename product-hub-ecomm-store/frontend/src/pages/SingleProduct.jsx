@@ -16,12 +16,14 @@ function SingleProduct() {
   const [error, setError] = useState(null);
   const [selectedImage, setSelectedImage] = useState(0);
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
   // Get how many of this product are already in the cart
   const { getQtyInCart } = useCart();
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-
     const fetchProduct = async () => {
       try {
         setLoading(true);

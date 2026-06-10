@@ -28,6 +28,10 @@ const ReviewOrdersUser = () => {
   const [expandedOrderId, setExpandedOrderId] = useState(null);
 
   useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
+  useEffect(() => {
     const fetchOrders = async () => {
       if (!authReady || !currentUser) return;
       setLoading(true);

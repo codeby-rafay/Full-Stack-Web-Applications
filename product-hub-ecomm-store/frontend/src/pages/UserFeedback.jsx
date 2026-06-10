@@ -24,6 +24,10 @@ function UserFeedback() {
   const [searchQuery, setSearchQuery] = useState("");
   const { currentUser, authReady } = useAuth();
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
   // Fetch all feedback
   useEffect(() => {
     if (!authReady || !currentUser?.id || currentUser?.role !== "admin") {

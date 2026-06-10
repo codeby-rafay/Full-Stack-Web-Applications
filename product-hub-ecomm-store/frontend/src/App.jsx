@@ -56,7 +56,7 @@ function App() {
   return (
     <div className="min-h-screen flex flex-col bg-[#fafaf8]">
       {!isAdminRoute && !isResetPasswordRoute && <Navbar />}
-      <main className="grow min-h-[80vh]">
+      <main className="grow min-h-[80vh] pt-16">
         <Routes>
           <Route
             path="/"

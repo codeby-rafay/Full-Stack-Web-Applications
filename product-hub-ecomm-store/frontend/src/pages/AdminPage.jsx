@@ -17,6 +17,10 @@ function AdminPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const { currentUser, authReady } = useAuth();
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
   const filteredUserData = userData.filter((record) => {
     if (!searchQuery.trim()) return true;
     const query = searchQuery.toLowerCase();

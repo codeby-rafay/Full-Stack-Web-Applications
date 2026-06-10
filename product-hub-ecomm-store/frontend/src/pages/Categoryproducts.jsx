@@ -13,6 +13,10 @@ function CategoryProducts() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
+  useEffect(() => {
     // Fetch products for this category
     const fetchCategoryProducts = async () => {
       try {
@@ -21,7 +25,7 @@ function CategoryProducts() {
         const data = await getProductsByCategory(slug);
         setProducts(data.products);
       } catch (err) {
-        console.error("Error fetching category products:", err);
+        console.error("Error fetching products for category:", err);
         setError(err.message);
       } finally {
         setLoading(false);
