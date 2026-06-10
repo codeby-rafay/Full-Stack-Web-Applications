@@ -32,6 +32,7 @@ function CartItems({ item, onRemove, onIncrease, onDecrease }) {
         {/* Remove button */}
         <button
           onClick={() => onRemove(item.id)}
+          title="Remove product"
           className="text-red-500 hover:bg-red-200 px-1 py-1 rounded-md transition-colors cursor-pointer shrink-0"
         >
           <Trash2 size={15} />

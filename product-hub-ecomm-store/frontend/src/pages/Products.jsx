@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { getAllProducts, searchProducts } from "../api/products";
 import { Loading, ErrorMessage, NoResults } from "../components/LoadingError";
 import { ProductsSkeletonLoader } from "../components/SkeletonLoader";
-import SearchBar from "../components/SearchbarComponents/SearchBar";
+import ProductSearchBar from "../components/SearchbarComponents/ProductSearchBar";
 import ProductCard from "../components/ProductCard";
 import Pagination from "../components/ProductsPageComponents/Pagination";
 
@@ -71,7 +71,7 @@ function Products() {
 
       {/* Search Bar */}
       <div className="mb-8 flex items-center gap-4 flex-wrap">
-        <SearchBar
+        <ProductSearchBar
           onSearch={handleSearch}
           placeholder="Search products by name..."
         />

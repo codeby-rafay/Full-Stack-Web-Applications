@@ -104,7 +104,7 @@ const ReviewOrdersUser = () => {
       setOrderToDelete(null);
       setActionType(null);
     } catch (error) {
-      console.error("Error performing action:", error);
+      console.error("Error performing action on order:", error);
       toast.error(error.response?.data?.message || "Failed to perform action", {
         position: "top-right",
         autoClose: 5000,
@@ -314,6 +314,7 @@ const ReviewOrdersUser = () => {
                               e.stopPropagation();
                               handleCancelOrderClick(order._id);
                             }}
+                            title="cancel order"
                             className="px-3 py-2 bg-yellow-50 text-yellow-700 border cursor-pointer border-yellow-200 rounded-lg text-sm font-medium hover:bg-yellow-100 transition-colors"
                           >
                             Cancel

@@ -35,12 +35,14 @@ function Navbar() {
                   className="size-10 rounded-lg"
                   src="/src/assets/product_hub_logo.jpg"
                   alt="Logo"
+                  title="ProductHub"
                 />
               </span>
             </div>
             <span
               className="text-xl font-bold text-gray-900"
               style={{ fontFamily: "Playfair Display, serif" }}
+              title="ProductHub"
             >
               Product<span className="text-orange-500">Hub</span>
             </span>

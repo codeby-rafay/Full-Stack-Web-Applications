@@ -32,6 +32,7 @@ const AddtoCartBtn = ({ product }) => {
             ? "bg-green-500 text-white cursor-default"
             : "bg-orange-500 hover:bg-orange-600 text-white"
         }`}
+        title={alreadyInCart ? "Already in cart" : "Add to cart"}
       >
         {alreadyInCart ? (
           <>

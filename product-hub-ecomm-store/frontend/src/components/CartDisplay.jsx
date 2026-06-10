@@ -121,7 +121,6 @@ function CartDisplay() {
           closeOnClick: false,
           pauseOnHover: false,
           draggable: true,
-          theme: "dark",
           transition: Slide,
         });
 

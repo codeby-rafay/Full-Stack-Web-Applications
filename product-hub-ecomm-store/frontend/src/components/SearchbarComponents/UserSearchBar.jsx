@@ -19,7 +19,7 @@ function UserSearchBar({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex gap-2 w-full max-w-lg">
+    <form onSubmit={handleSubmit} className="flex gap-2 w-full max-w-lg" title="Search user records">
       <div className="relative grow">
         {/* Search icon */}
         <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
@@ -52,6 +52,7 @@ function UserSearchBar({
           <button
             type="button"
             onClick={handleClear}
+            title="Clear search"
             className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600 cursor-pointer"
           >
             <svg
@@ -73,6 +74,7 @@ function UserSearchBar({
 
       <button
         type="submit"
+        title = "Search user records"
         className="bg-orange-500 hover:bg-orange-600 text-white px-5 py-2.5 rounded-xl text-sm font-medium active:scale-95 transition-all cursor-pointer"
       >
         Search

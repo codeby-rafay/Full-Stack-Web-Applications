@@ -1,7 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 import { searchProducts } from "../../api/products";
 
-function SearchBar({ onSearch, placeholder = "Search products by name..." }) {
+function ProductSearchBar({
+  onSearch,
+  placeholder = "Search products by name...",
+}) {
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -75,7 +78,11 @@ function SearchBar({ onSearch, placeholder = "Search products by name..." }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex gap-2 w-full max-w-lg">
+    <form
+      onSubmit={handleSubmit}
+      className="flex gap-2 w-full max-w-lg"
+      title="Search products"
+    >
       <div className="relative grow" ref={dropdownRef}>
         {/* Search icon */}
         <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
@@ -111,6 +118,7 @@ function SearchBar({ onSearch, placeholder = "Search products by name..." }) {
           <button
             type="button"
             onClick={handleClear}
+            title="Clear search"
             className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600 cursor-pointer"
           >
             <svg
@@ -182,4 +190,4 @@ function SearchBar({ onSearch, placeholder = "Search products by name..." }) {
   );
 }
 
-export default SearchBar;
+export default ProductSearchBar;

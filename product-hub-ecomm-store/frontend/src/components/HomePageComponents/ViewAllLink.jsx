@@ -5,6 +5,7 @@ const ViewAllLink = () => {
     <div>
       <Link
         to="/products"
+        title="View all products"
         className="text-orange-500 hover:text-orange-700 text-lg font-bold flex items-center gap-1 hover:translate-x-2 transition-all"
       >
         View all

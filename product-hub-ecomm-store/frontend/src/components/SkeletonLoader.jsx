@@ -371,32 +371,17 @@ export const UserProfileSkeletonLoader = () => (
 // REVIEW ORDERS (USER) PAGE
 const OrderCardSkeleton = () => (
   <div className="bg-white rounded-2xl border border-gray-100 p-5 space-y-4">
-    {/* Top row */}
-    <div className="flex items-start justify-between">
-      <div className="flex items-center gap-3">
-        <Skeleton circle height={40} width={40} />
-        <div className="space-y-1">
-          <Skeleton height={15} width={160} />
-          <Skeleton height={12} width={110} />
-        </div>
-      </div>
-      <Skeleton height={26} width={90} borderRadius={99} />
-    </div>
-
     {/* Meta row */}
-    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-      {[...Array(4)].map((_, i) => (
+    <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
+      {[...Array(5)].map((_, i) => (
         <div key={i} className="space-y-1">
           <Skeleton height={11} width={60} />
           <Skeleton height={14} width={80} />
         </div>
       ))}
-    </div>
-
-    {/* Buttons */}
-    <div className="flex gap-2 justify-end pt-1">
-      <Skeleton height={34} width={100} borderRadius={8} />
-      <Skeleton height={34} width={80} borderRadius={8} />
+      <div>
+        <Skeleton height={34} width={100} borderRadius={8} />
+      </div>
     </div>
   </div>
 );
@@ -412,8 +397,8 @@ export const ReviewOrdersSkeletonLoader = () => (
 
       {/* Filter tabs */}
       <div className="flex gap-2 mb-6 flex-wrap">
-        {[...Array(5)].map((_, i) => (
-          <Skeleton key={i} height={34} width={90} borderRadius={99} />
+        {[...Array(3)].map((_, i) => (
+          <Skeleton key={i} height={114} width={290} borderRadius={9} />
         ))}
       </div>
 
@@ -699,6 +684,129 @@ export const ContactSkeletonLoader = () => (
           </div>
         </div>
       ))}
+    </div>
+  </div>
+);
+
+// Login
+export const LoginSkeletonLoader = () => (
+  <div className="min-h-screen bg-linear-to-br from-orange-50 to-amber-50 flex items-center justify-center px-4 py-12">
+    <div className="w-full max-w-md">
+      {/* Header */}
+      <div className="text-center mb-8 flex flex-col items-center gap-3">
+        <Skeleton height={48} width={280} />
+        <Skeleton height={16} width={260} />
+      </div>
+
+      {/* Login Card */}
+      <div className="bg-white border border-gray-100 rounded-2xl p-8 shadow-sm">
+        {/* Email */}
+        <div className="mb-5">
+          <Skeleton height={14} width={110} className="mb-2" />
+          <Skeleton height={48} borderRadius={12} />
+        </div>
+
+        {/* Password */}
+        <div className="mb-5">
+          <div className="flex justify-between items-center mb-2">
+            <Skeleton height={14} width={70} />
+            <Skeleton height={12} width={90} />
+          </div>
+          <Skeleton height={48} borderRadius={12} />
+        </div>
+
+        {/* Remember Me */}
+        <div className="flex items-center gap-2 mb-6">
+          <Skeleton height={16} width={16} />
+          <Skeleton height={14} width={100} />
+        </div>
+
+        {/* Sign In Button */}
+        <Skeleton height={48} borderRadius={12} />
+
+        {/* Divider */}
+        <div className="flex items-center gap-3 my-6">
+          <Skeleton height={1} className="flex-1" />
+          <Skeleton height={14} width={20} />
+          <Skeleton height={1} className="flex-1" />
+        </div>
+
+        {/* Google Button */}
+        <Skeleton height={42} borderRadius={8} />
+      </div>
+
+      {/* Sign Up Link */}
+      <div className="mt-6 flex justify-center">
+        <Skeleton height={14} width={220} />
+      </div>
+    </div>
+  </div>
+);
+
+// Signup
+export const SignupSkeletonLoader = () => (
+  <div className="min-h-screen bg-linear-to-br from-orange-50 to-amber-50 flex items-center justify-center px-4 py-12">
+    <div className="w-full max-w-md">
+      {/* Header */}
+      <div className="text-center mb-8 flex flex-col items-center gap-3">
+        <Skeleton height={48} width={300} />
+        <Skeleton height={16} width={280} />
+      </div>
+
+      {/* Form Card */}
+      <div className="bg-white border border-gray-100 rounded-2xl p-8 shadow-sm">
+        {/* Full Name */}
+        <div className="mb-5">
+          <Skeleton height={14} width={90} className="mb-2" />
+          <Skeleton height={48} borderRadius={12} />
+        </div>
+
+        {/* Email */}
+        <div className="mb-5">
+          <Skeleton height={14} width={110} className="mb-2" />
+          <Skeleton height={48} borderRadius={12} />
+        </div>
+
+        {/* Password */}
+        <div className="mb-5">
+          <Skeleton height={14} width={80} className="mb-2" />
+          <Skeleton height={48} borderRadius={12} />
+          <Skeleton height={12} width={140} className="mt-2" />
+        </div>
+
+        {/* Confirm Password */}
+        <div className="mb-5">
+          <Skeleton height={14} width={120} className="mb-2" />
+          <Skeleton height={48} borderRadius={12} />
+        </div>
+
+        {/* Terms & Conditions */}
+        <div className="flex items-start gap-3 mb-6">
+          <Skeleton height={16} width={16} />
+          <div className="flex-1">
+            <Skeleton height={14} width="95%" />
+            <Skeleton height={14} width="75%" className="mt-1" />
+          </div>
+        </div>
+
+        {/* Create Account Button */}
+        <Skeleton height={48} borderRadius={12} />
+
+        {/* Divider */}
+        <div className="flex items-center gap-3 my-6">
+          <Skeleton height={1} className="flex-1" />
+          <Skeleton height={14} width={20} />
+          <Skeleton height={1} className="flex-1" />
+        </div>
+
+        {/* Google Button */}
+        <Skeleton height={42} borderRadius={8} />
+      </div>
+
+      {/* Login Link */}
+      <div className="mt-6 flex justify-center">
+        <Skeleton height={14} width={220} />
+      </div>
     </div>
   </div>
 );

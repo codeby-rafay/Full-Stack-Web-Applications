@@ -391,6 +391,7 @@ const ManageOrdersAdmin = () => {
             <button
               key={status}
               onClick={() => setFilterStatus(status)}
+              title={status.charAt(0).toUpperCase() + `${status} orders`.slice(1)}
               className={`px-4 py-2 rounded-lg font-medium cursor-pointer transition-all capitalize ${
                 filterStatus === status
                   ? "bg-orange-500 text-white shadow-md"

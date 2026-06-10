@@ -25,9 +25,8 @@ const MobileMenuLinks = ({ navLinks, isActive, menuOpen, setMenuOpen }) => {
     <div>
       {menuOpen && (
         <div className="md:hidden pb-4 border-t border-gray-100 pt-2">
-          {/* Regular nav links (filter out "Saved" - it goes below) */}
+          {/* Regular nav links */}
           {navLinks
-            .filter((link) => link.name !== "Saved")
             .map((link) => (
               <Link
                 key={link.name}

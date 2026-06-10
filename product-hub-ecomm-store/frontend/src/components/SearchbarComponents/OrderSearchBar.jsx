@@ -19,7 +19,7 @@ function OrderSearchBar({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex gap-2 w-full max-w-lg">
+    <form onSubmit={handleSubmit} className="flex gap-2 w-full max-w-lg" title="Search orders">
       <div className="relative grow">
         {/* Search icon */}
         <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
@@ -52,6 +52,7 @@ function OrderSearchBar({
           <button
             type="button"
             onClick={handleClear}
+            title="Clear search"
             className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600 cursor-pointer"
           >
             <svg
@@ -74,7 +75,8 @@ function OrderSearchBar({
       {/* Search button */}
       <button
         type="submit"
-        className="px-4 bg-orange-500 hover:bg-orange-600 text-white rounded-xl font-medium transition-all cursor-pointer active:scale-95"
+        className="px-4 bg-orange-500 hover:bg-orange-600 text-white rounded-xl font-medium text-sm transition-all cursor-pointer active:scale-95"
+        title="Search orders"
       >
         Search
       </button>

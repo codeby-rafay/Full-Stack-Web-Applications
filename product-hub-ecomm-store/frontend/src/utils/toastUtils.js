@@ -8,7 +8,6 @@ export const addtocartToast = () => {
     closeOnClick: false,
     pauseOnHover: false,
     draggable: true,
-    theme: "dark",
     transition: Slide,
   });
 };
@@ -21,7 +20,6 @@ export const saveToast = () => {
     closeOnClick: false,
     pauseOnHover: false,
     draggable: true,
-    theme: "dark",
     transition: Slide,
   });
 };
@@ -34,7 +32,6 @@ export const unsaveToast = () => {
     closeOnClick: false,
     pauseOnHover: false,
     draggable: true,
-    theme: "dark",
     transition: Slide,
   });
 };

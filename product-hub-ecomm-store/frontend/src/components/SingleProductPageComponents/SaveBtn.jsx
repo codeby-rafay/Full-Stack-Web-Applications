@@ -19,6 +19,7 @@ const SaveBtn = ({ product }) => {
     <div>
       <button
         onClick={handleClick}
+        title={saved ? "Remove from saved" : "Save for later"}
         className={`py-3 px-4 flex items-center gap-2 cursor-pointer rounded-xl transition-colors ${
           saved
             ? "bg-red-100 hover:bg-red-200 text-red-600"

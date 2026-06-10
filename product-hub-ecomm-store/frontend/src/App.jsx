@@ -15,6 +15,8 @@ import {
   UserFeedbackSkeletonLoader,
   AboutSkeletonLoader,
   ContactSkeletonLoader,
+  LoginSkeletonLoader,
+  SignupSkeletonLoader,
   SkeletonLoader,
 } from "./components/SkeletonLoader";
 import { ToastContainer } from "react-toastify";
@@ -147,7 +149,7 @@ function App() {
           <Route
             path="/login"
             element={
-              <Suspense fallback={<SkeletonLoader />}>
+              <Suspense fallback={<LoginSkeletonLoader />}>
                 <Login />
               </Suspense>
             }
@@ -155,7 +157,7 @@ function App() {
           <Route
             path="/signup"
             element={
-              <Suspense fallback={<SkeletonLoader />}>
+              <Suspense fallback={<SignupSkeletonLoader />}>
                 <Signup />
               </Suspense>
             }

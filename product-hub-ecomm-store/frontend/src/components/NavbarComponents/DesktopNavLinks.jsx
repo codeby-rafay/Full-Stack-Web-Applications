@@ -44,21 +44,20 @@ const DesktopNavLinks = ({ navLinks, isActive }) => {
 
   return (
     <div className="hidden md:flex items-center ml-auto gap-1">
-      {navLinks
-        .filter((link) => link.name !== "Saved")
-        .map((link) => (
-          <Link
-            key={link.name}
-            to={link.path}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 ${
-              isActive(link.path)
-                ? "bg-orange-500 text-white"
-                : "text-gray-600 hover:bg-orange-50 hover:text-orange-600"
-            }`}
-          >
-            {link.name}
-          </Link>
-        ))}
+      {navLinks.map((link) => (
+        <Link
+          key={link.name}
+          to={link.path}
+          title={link.title || link.name}
+          className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 ${
+            isActive(link.path)
+              ? "bg-orange-500 text-white"
+              : "text-gray-600 hover:bg-orange-50 hover:text-orange-600"
+          }`}
+        >
+          {link.name}
+        </Link>
+      ))}
 
       <div className="flex items-center gap-2 ml-4 pl-4 border-l border-gray-200">
         {currentUser ? (
@@ -67,6 +66,7 @@ const DesktopNavLinks = ({ navLinks, isActive }) => {
             <button
               onClick={() => setDropdownOpen(!dropdownOpen)}
               className="relative flex items-center gap-1 focus:outline-none"
+              title="My profile"
             >
               {/* Round circle with first letter */}
               <div className="w-9 h-9 rounded-full bg-orange-500 text-white flex items-center justify-center font-bold text-sm uppercase cursor-pointer hover:bg-orange-600 transition-colors">
