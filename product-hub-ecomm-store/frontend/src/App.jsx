@@ -24,6 +24,7 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import CartDisplay from "./components/CartDisplay";
 import ProtectedAdminRoute from "./components/ProtectedAdminRoute";
+import Chatbot from "./components/Chatbot";
 
 const AdminLayout = lazy(() => import("./components/AdminLayout"));
 const Home = lazy(() => import("./pages/Home"));
@@ -220,6 +221,7 @@ function App() {
       {!isAdminRoute && !isResetPasswordRoute && !isAuthRoute && (
         <CartDisplay />
       )}
+      {!isAdminRoute && !isResetPasswordRoute && <Chatbot />}
       <ToastContainer />
     </div>
   );
